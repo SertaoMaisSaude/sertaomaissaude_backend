@@ -1,0 +1,525 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /api/polls/:
+    get:
+      operationId: listPolls
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    choices:
+                      type: array
+                      items:
+                        properties:
+                          id:
+                            type: integer
+                            readOnly: true
+                          votes:
+                            type: array
+                            items:
+                              properties:
+                                id:
+                                  type: integer
+                                  readOnly: true
+                                choice:
+                                  type: integer
+                                poll:
+                                  type: integer
+                                voted_by:
+                                  type: integer
+                              required:
+                              - choice
+                              - poll
+                              - voted_by
+                          choice_text:
+                            type: string
+                            maxLength: 100
+                          poll:
+                            type: integer
+                        required:
+                        - choice_text
+                        - poll
+                      readOnly: true
+                    question:
+                      type: string
+                      maxLength: 100
+                    pub_date:
+                      type: string
+                      format: date-time
+                      readOnly: true
+                    created_by:
+                      type: integer
+                  required:
+                  - question
+                  - created_by
+          description: ''
+    post:
+      operationId: CreatePoll
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id001
+              properties:
+                question:
+                  type: string
+                  maxLength: 100
+                created_by:
+                  type: integer
+              required:
+              - question
+              - created_by
+          application/x-www-form-urlencoded:
+            schema: *id001
+          multipart/form-data:
+            schema: *id001
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  choices:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                          readOnly: true
+                        votes:
+                          type: array
+                          items:
+                            properties:
+                              id:
+                                type: integer
+                                readOnly: true
+                              choice:
+                                type: integer
+                              poll:
+                                type: integer
+                              voted_by:
+                                type: integer
+                            required:
+                            - choice
+                            - poll
+                            - voted_by
+                        choice_text:
+                          type: string
+                          maxLength: 100
+                        poll:
+                          type: integer
+                      required:
+                      - choice_text
+                      - poll
+                    readOnly: true
+                  question:
+                    type: string
+                    maxLength: 100
+                  pub_date:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  created_by:
+                    type: integer
+                required:
+                - question
+                - created_by
+          description: ''
+  /api/polls/{id}/:
+    get:
+      operationId: RetrievePoll
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this poll.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  choices:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                          readOnly: true
+                        votes:
+                          type: array
+                          items:
+                            properties:
+                              id:
+                                type: integer
+                                readOnly: true
+                              choice:
+                                type: integer
+                              poll:
+                                type: integer
+                              voted_by:
+                                type: integer
+                            required:
+                            - choice
+                            - poll
+                            - voted_by
+                        choice_text:
+                          type: string
+                          maxLength: 100
+                        poll:
+                          type: integer
+                      required:
+                      - choice_text
+                      - poll
+                    readOnly: true
+                  question:
+                    type: string
+                    maxLength: 100
+                  pub_date:
+                    type: string
+                    format: date-time
+                    readOnly: true
+                  created_by:
+                    type: integer
+                required:
+                - question
+                - created_by
+          description: ''
+    delete:
+      operationId: DestroyPoll
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this poll.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /api/polls/{id}/choices/:
+    get:
+      operationId: listChoices
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this choice.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    votes:
+                      type: array
+                      items:
+                        properties:
+                          id:
+                            type: integer
+                            readOnly: true
+                          choice:
+                            type: integer
+                          poll:
+                            type: integer
+                          voted_by:
+                            type: integer
+                        required:
+                        - choice
+                        - poll
+                        - voted_by
+                    choice_text:
+                      type: string
+                      maxLength: 100
+                    poll:
+                      type: integer
+                  required:
+                  - choice_text
+                  - poll
+          description: ''
+    post:
+      operationId: CreateChoice
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this choice.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id002
+              properties:
+                votes:
+                  type: array
+                  items:
+                    properties:
+                      id:
+                        type: integer
+                        readOnly: true
+                      choice:
+                        type: integer
+                      poll:
+                        type: integer
+                      voted_by:
+                        type: integer
+                    required:
+                    - choice
+                    - poll
+                    - voted_by
+                choice_text:
+                  type: string
+                  maxLength: 100
+                poll:
+                  type: integer
+              required:
+              - choice_text
+              - poll
+          application/x-www-form-urlencoded:
+            schema: *id002
+          multipart/form-data:
+            schema: *id002
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  votes:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                          readOnly: true
+                        choice:
+                          type: integer
+                        poll:
+                          type: integer
+                        voted_by:
+                          type: integer
+                      required:
+                      - choice
+                      - poll
+                      - voted_by
+                  choice_text:
+                    type: string
+                    maxLength: 100
+                  poll:
+                    type: integer
+                required:
+                - choice_text
+                - poll
+          description: ''
+  /api/choices/:
+    get:
+      operationId: listChoices
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    votes:
+                      type: array
+                      items:
+                        properties:
+                          id:
+                            type: integer
+                            readOnly: true
+                          choice:
+                            type: integer
+                          poll:
+                            type: integer
+                          voted_by:
+                            type: integer
+                        required:
+                        - choice
+                        - poll
+                        - voted_by
+                    choice_text:
+                      type: string
+                      maxLength: 100
+                    poll:
+                      type: integer
+                  required:
+                  - choice_text
+                  - poll
+          description: ''
+    post:
+      operationId: CreateChoice
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id003
+              properties:
+                votes:
+                  type: array
+                  items:
+                    properties:
+                      id:
+                        type: integer
+                        readOnly: true
+                      choice:
+                        type: integer
+                      poll:
+                        type: integer
+                      voted_by:
+                        type: integer
+                    required:
+                    - choice
+                    - poll
+                    - voted_by
+                choice_text:
+                  type: string
+                  maxLength: 100
+                poll:
+                  type: integer
+              required:
+              - choice_text
+              - poll
+          application/x-www-form-urlencoded:
+            schema: *id003
+          multipart/form-data:
+            schema: *id003
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  votes:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: integer
+                          readOnly: true
+                        choice:
+                          type: integer
+                        poll:
+                          type: integer
+                        voted_by:
+                          type: integer
+                      required:
+                      - choice
+                      - poll
+                      - voted_by
+                  choice_text:
+                    type: string
+                    maxLength: 100
+                  poll:
+                    type: integer
+                required:
+                - choice_text
+                - poll
+          description: ''
+  /swagger-docs/:
+    get:
+      operationId: listSwaggerSchemas
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/coreapi+json:
+              schema: &id004
+                type: array
+                items: {}
+            application/openapi+json:
+              schema: *id004
+            text/html:
+              schema: *id004
+          description: ''
+  /api/vote/:
+    post:
+      operationId: CreateVote
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id005
+              properties:
+                choice:
+                  type: integer
+                poll:
+                  type: integer
+                voted_by:
+                  type: integer
+              required:
+              - choice
+              - poll
+              - voted_by
+          application/x-www-form-urlencoded:
+            schema: *id005
+          multipart/form-data:
+            schema: *id005
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  choice:
+                    type: integer
+                  poll:
+                    type: integer
+                  voted_by:
+                    type: integer
+                required:
+                - choice
+                - poll
+                - voted_by
+          description: ''

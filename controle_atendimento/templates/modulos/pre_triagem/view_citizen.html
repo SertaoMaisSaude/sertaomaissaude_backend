@@ -1,0 +1,214 @@
+{% extends 'core/base/lautoy_base.html' %}
+{% block content %}
+    <!-- Page Heading -->
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+           <div class="col-8">
+                <h4><strong>Atendimento</strong></h4>
+                <h5 class="float-left"><strong>Nome: </strong>{{ analizy.citizen.name }}</h5>
+           </div>
+            <div class="col-4">
+                <a href="https://wa.me/55{{ analizy.citizen.phoneNumber|cut:" " }}" target="_blank" class="btn btn-success mt-3 btn-lg float-right">Atendimento<img src="https://static.whatsapp.net/rsrc.php/v3/yP/r/rYZqPCBaG70.png" class="ml-2 mb-1" height="25px"/></a>
+           </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-left-dark mb-3">
+                    <div class="card-header">Todas as Análises de {{ analizy.citizen.name }}</div>
+                    <div class="card-body p-3">
+                        <table class="table table-bordered mb-2" style="width:100%">
+                            <thead class="bg-dark text-white">
+                                <tr>
+                                    <th class="p-1">Reportou em:</th>
+                                    <th class="p-1">Sintomas</th>
+                                    <th class="p-1">Grupo de risco</th>
+                                    <th class="p-1">Contato?</th>
+                                    <th class="p-1">Status</th>
+                                    <th class="p-1">Situação</th>
+                                </tr>
+                            </thead>
+                            <tbody style="font-size: 14px">
+                            {% for analizy in analises %}
+                                <tr>
+                                    <td class="p-1">
+                                        {{ analizy.date }}
+                                    </td>
+                                    <td class="p-1">
+                                            {% for sintoma in analizy.listSympton.all %}
+                                                    {{sintoma}} /
+                                            {% endfor %}
+                                    </td>
+                                    <td class="p-1">
+                                        {% if analizy.citizen.age > 59 %}
+                                            Idoso /
+                                        {% endif %}
+                                        {% for risk in analizy.citizen.listRiskGroup.all %}
+                                            {{ risk }} /
+                                        {% endfor %}
+                                    </td>
+                                    <td class="p-1 text-primary">
+                                            {{ analizy.covidContact.typeContactCode }}
+                                    </td>
+                                    <td class="p-1">
+                                            {{ analizy.teleatend_status }}
+                                    </td>
+                                    <td class="p-1">
+                                        {{ analizy.patient_situation }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <p class="mt-0 mb-0 text-dark" style="font-size: 13px">NSC = Não sabe se teve contato git com caso de COVID-19<br>CCS = Contato com caso suspeito de COVID-19<br>CCC = Contato com caso confirmado de COVID-19</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-12">
+                <div class="card border-left-primary">
+                    <div class="card-header">
+                        <strong>Dados detalhados da última análise</strong>
+                    </div>
+                    <div class="card-body">
+                        <p><span class="text-primary">Reportou em: </span>
+                           {{ analizy.date }}
+                        </p>
+                        <p><span class="text-primary">Febre: </span>
+                            {% if analizy.has_faver %}
+                                <span class="text-danger">{{ analizy.fever }}° de Febre</span>
+                            {% else %}
+                                Não reportou febre
+                            {% endif %}
+                        </p>
+                        <p><span class="text-primary">Contato com COVID 19: </span>{{ analizy.covidContact.description }}</p>
+                        <div class="card">
+                            <div class="card-header">
+                                Grupo de Risco
+                            </div>
+                            <div class="card-body">
+                                {% for risk in analizy.citizen.listRiskGroup.all %}
+                                <li>
+                                    {{risk}}
+                                </li>
+                            {% endfor %}
+                            </div>
+                        </div>
+                        <br>
+                        <div class="card">
+                            <div class="card-header">
+                                Sintomas
+                            </div>
+                            <div class="card-body">
+                                {% for sintoma in analizy.listSympton.all %}
+                                <li>
+                                    {{sintoma}}
+                                </li>
+                            {% endfor %}
+                            </div>
+                        </div>
+                        <br>
+                        <p><span class="text-danger">Status de Atendimento: </span>{{ analizy.teleatend_status }}</p>
+                        <p><span class="text-danger">Situação de Saúde: </span>{{ analizy.patient_situation }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#modalstatus">Alterar Status de Teleatendimento</button>
+                        <button type="button" class="btn btn-primary w-100 mt-2" data-toggle="modal" data-target="#modalsituacao">Alterar Situação do Paciente</button>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-12">
+                <div class="card border-left-primary">
+                    <div class="card-header">
+                        <strong>Dados Pessoais</strong>
+                    </div>
+                    <div class="card-body">
+                        <p><span class="text-primary">Telefone: </span>{{ analizy.citizen.phoneNumber }}</p>
+                        <p><span class="text-primary">Sexo: </span>{{ analizy.citizen.sex }}</p>
+                        <p><span class="text-primary">Idade: </span>{{ analizy.citizen.age }}</p>
+                        <p><span class="text-primary">Cidade/CEP: </span>{{ analizy.citizen.city.name }} - {{ analizy.citizen.cep }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Modal -->
+<div class="modal fade" id="modalstatus" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Alterar Status</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" align="center">
+          <form method="POST">
+            {% csrf_token %}
+            {% for field in formstatus %}
+                {{ field }}
+            {% endfor %}
+            <br>
+            <input type="hidden" name="analise" value="{{ analizy.id }}">
+            <input type="hidden" name="situacao" value="{{ analizy.patient_situation }}">
+            <button type="submit" class="btn btn-success w-100">Salvar Status</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="modal fade" id="modalsituacao" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Alterar Situação</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" align="center">
+
+            <form method="post">
+                  {% csrf_token %}
+                {% for field in formsituacao %}
+                    {{ field }}
+                {% endfor %}
+                <br>
+                <input type="hidden" name="analise" value="{{ analizy.id }}">
+                <input type="hidden" name="status" value="{{ analizy.teleatend_status }}">
+                <button type="submit" class="btn btn-success w-100">Salvar Situação</button>
+            </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script>
+    function alterarStatus(id){
+        document.getElementById('statusatual'+id).style.display = 'none';
+        document.getElementById('statusalterar'+id).style.display = 'block';
+    }
+    function alterarSituacao(id){
+        document.getElementById('situacaoatual'+id).style.display = 'none';
+        document.getElementById('situacaoalterar'+id).style.display = 'block';
+    }
+</script>
+
+{% endblock %}

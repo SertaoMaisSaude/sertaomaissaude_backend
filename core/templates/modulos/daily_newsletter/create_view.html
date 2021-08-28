@@ -1,0 +1,145 @@
+{% extends 'core/base/base_create_view.html' %}
+{% load static %}
+
+{% block cabecalho %}
+{% if object.pk is none %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Novo Boletim</h1>
+</div>
+{% else %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Editar Boletim</h1>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block formulario %}
+<div class="row">
+    <div class="col-md-6">
+        {{ form.city.label_tag }}
+        {{ form.city }}
+        <div class="errorList">
+            {{ form.city.errors }}
+        </div>
+    </div>
+    <div class="col-md-6">
+        {{ form.date_publication.label_tag }}
+        {{ form.date_publication }}
+        <div class="errorList">
+            {{ form.date_publication.errors }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        {{ form.discarded.label_tag }}
+        {{ form.discarded }}
+        <div class="errorList">
+            {{ form.discarded.errors }}
+        </div>
+    </div>
+    <div class="col-md-3">
+        {{ form.underInvestigation.label_tag }}
+        {{ form.underInvestigation }}
+        <div class="errorList">
+            {{ form.underInvestigation.errors }}
+        </div>
+    </div>
+    <div class="col-md-3">
+        {{ form.waiting_exam.label_tag }}
+        {{ form.waiting_exam }}
+        <div class="errorList">
+            {{ form.waiting_exam.errors }}
+        </div>
+    </div>
+    <div class="col-md-3">
+        {{ form.confirmed.label_tag }}
+        {{ form.confirmed }}
+        <div class="errorList">
+            {{ form.confirmed.errors }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        {{ form.recovered.label_tag }}
+        {{ form.recovered }}
+        <div class="errorList">
+            {{ form.recovered.errors }}
+        </div>
+    </div>
+    <div class="col-md-3">
+        {{ form.deaths.label_tag }}
+        {{ form.deaths }}
+        <div class="errorList">
+            {{ form.deaths.errors }}
+        </div>
+    </div>
+    <div class="col-md-3">
+        {{ form.homeIsolation.label_tag }}
+        {{ form.homeIsolation }}
+        <div class="errorList">
+            {{ form.homeIsolation.errors }}
+        </div>
+    </div>
+    <div class="col-md-3">
+        {{ form.hospitalStay.label_tag }}
+        {{ form.hospitalStay }}
+        <div class="errorList">
+            {{ form.hospitalStay.errors }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        {{ form.testsCounty.label_tag }}
+        {{ form.testsCounty }}
+        <div class="errorList">
+            {{ form.testsCounty.errors }}
+        </div>
+    </div>
+    <div class="col-md-3">
+        {{ form.testsLacen.label_tag }}
+        {{ form.testsLacen }}
+        <div class="errorList">
+            {{ form.testsLacen.errors }}
+        </div>
+    </div>
+    <div class="col-md-3">
+        {{ form.testsPrivate.label_tag }}
+        {{ form.testsPrivate }}
+        <div class="errorList">
+            {{ form.testsPrivate.errors }}
+        </div>
+    </div>
+    <div class="col-md-3">
+        {{ form.active.label_tag }}
+        {{ form.active }}
+        <div class="errorList">
+            {{ form.active.errors }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if object.pk is none %}
+<script>
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
+
+        return [day, month, year].join('/');
+    }
+    dataAtual = document.getElementById('id_date_publication')
+    dataAtual.value = formatDate(new Date())
+</script>
+{% endif %}
+{% endblock %}

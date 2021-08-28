@@ -1,0 +1,451 @@
+{% extends 'core/base/lautoy_base.html' %}
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Atendimento</h1>
+    </div>
+
+
+    <div class="dropdown show">
+        <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" href="#" role="button"
+            id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-download fa-sm text-white-50"></i>Gerar Relatório
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            {% if search_list %}
+            <a href="{% url 'core:pages:analisy:export' %}?{% if search %}search={{search}}{% endif %}{% if sex %}{% for sx in sex %}&sex={{sx}}{% endfor %}{% endif %}{% if hcenter %}{% for hc in hcenter %}&hcenter={{hc}}{% endfor %}{% endif %}{% if nbhood %}{% for nbh in nbhood %}&nbhood={{nbh}}{% endfor %}{% endif %}{% if date %}&date={{date}}{% endif %}"
+                class="dropdown-item" data-toggle="tooltip" data-placement="top" title="Exportar para XLS"><i
+                    class="fa fa-file-excel mr-2 text-success"></i>Exportar para Excel
+            </a>
+            <a href="{% url 'core:pages:analisy:export_pdf' %}?{% if search %}search={{search}}{% endif %}{% if sex %}{% for sx in sex %}&sex={{sx}}{% endfor %}{% endif %}{% if hcenter %}{% for hc in hcenter %}&hcenter={{hc}}{% endfor %}{% endif %}{% if nbhood %}{% for nbh in nbhood %}&nbhood={{nbh}}{% endfor %}{% endif %}{% if date %}&date={{date}}{% endif %}"
+                class="dropdown-item" data-toggle="tooltip" data-placement="top" title="Exportar para XLS"><i
+                    class="fa fa-file-pdf mr-2 text-danger"></i>Exportar para PDF
+            </a>
+            {% else %}
+            <a href="{% url 'core:pages:analisy:export' %}" class="dropdown-item" data-toggle="tooltip"
+                data-placement="top" title="Exportar para XLS"><i
+                    class="fa fa-file-excel mr-2 text-success"></i>Exportar para Excel
+            </a>
+
+            <a href="{% url 'core:pages:analisy:export_pdf' %}" class="dropdown-item" data-toggle="tooltip"
+                data-placement="top" title="Exportar para XLS"><i class="fa fa-file-pdf mr-2 text-danger"></i>Exportar
+                para PDF
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<form method="get">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="row col-md-12">
+                    <h4>Filtros:</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <select name="sex" class="selectpicker form-control" data-live-search="true"
+                        data-provide="selectpicker" data-size="10" id="id_sexFilter" multiple="" tabindex="-98" multiple
+                        title="Sexo">
+                        <optgroup label="Sexo">
+
+                            <option id="sexoM" value="M">Masculino</option>
+                            <option id="sexoF" value="F">Feminino</option>
+
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="hcenter" class="selectpicker form-control" data-live-search="true"
+                        data-provide="selectpicker" data-size="10" id="id_hcenter" multiple="" tabindex="-98" multiple
+                        title="Centro de Saúde">
+                        <optgroup label="Centro de Saúde">
+                            {% for healthcenter in healthcenters %}
+                            <option id="hcenter{{healthcenter.id}}" value="{{healthcenter.id}}">
+                                {{healthcenter.name}}</option>
+                            {% endfor %}
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="nbhood" class="selectpicker form-control" data-live-search="true"
+                        data-provide="selectpicker" data-size="10" id="id_neighborhood" multiple="" tabindex="-98"
+                        multiple title="Bairro">
+                        <optgroup label="Bairro">
+                            {% for neighborhood in neighborhoods %}
+                            <option
+                                id="nbhood{% if neighborhood.neighborhood is not None %}{{neighborhood.neighborhood}}{% else %}vazio{% endif %}"
+                                value="{% if neighborhood.neighborhood is None %}vazio{% else %}{{neighborhood.neighborhood}}{% endif %}">
+                                {% if neighborhood.neighborhood is None %}
+                                Sem bairro
+                                {% else %}
+                                {{neighborhood.neighborhood}}
+                                {% endif %}
+                            </option>
+                            {% endfor %}
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="col-md-2">
+                    <input type="text" name="date" data-provide="datepicker2" class="form-control datepicker2"
+                        id="id_date" placeholder="Data" value="{{date}}">
+                </div>
+
+
+                <div class="col-md-1">
+                    <div class="input-group">
+                        <button class="btn btn-primary" id="search"
+                            style="vertical-align: middle; text-align: center; margin: 0px;" type="submit">
+                            <i class="fas fa-filter" style="font-size: 20px; color: white;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</form>
+
+
+<div class="card mt-2">
+    <div class="card-body" style="font-size: 14px">
+        <table id="myTable" class="display" style="width:100%">
+            <thead class="btn-primary">
+                <tr>
+                    <th>Nome</th>
+                    <th>Triagem</th>
+                    <th>Reportou em:</th>
+                    <th>Grupo de risco</th>
+                    <th>Status Teleatendimento</th>
+                    <th>Status</th>
+                    <th>Detalhes</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {#                first_situation, second_situation, third_situation, fourth_situation, fifth_situation#}
+
+                {% for analizy in first_situation %}
+                <tr>
+
+                    <td>
+                        <strong>{{ analizy.citizen.name }}</strong>
+                        <br>{{ analizy.citizen.age }} anos
+                        <br>{{ analizy.citizen.phoneNumber }}
+                    </td>
+                    <td align="center" style="color: darkred">
+                        <div class="bg-danger btn-icon-split">
+                            <span class="icon"></span>
+                            <span class="text text-white" style="font-size: 14px">S1</span>
+                        </div>
+                    </td>
+                    <td>
+                        {{ analizy.date }}
+                    </td>
+                    <td>
+                        <ul>
+                            {% if analizy.citizen.age > 59 %}
+                            <li>Idoso</li>
+                            {% endif %}
+                            {% for risk in analizy.citizen.listRiskGroup.all %}
+                            <li>{{ risk }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td align="center">
+                        <div id="statusatual{{ analizy.id }}" style="display: block">
+                            {{ analizy.teleatend_status }}
+                        </div>
+                    </td>
+                    <td align="center">
+                        <div id="situacaoatual{{ analizy.id }}" style="display: block">
+                            <div class="btn btn-sm btn-primary btn-icon-split">
+                                <span class="text">{{ analizy.patient_situation }}</span>
+                            </div>
+                            <br>
+                        </div>
+                    </td>
+                    <td align="center">
+                        <a href="{% url 'atendimento:pages:triagem:view_citizen' analizy.id %}">
+                            <i class="fas fa-search"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+                {% for analizy in second_situation %}
+                <tr>
+
+                    <td>
+                        <strong>{{ analizy.citizen.name }}</strong>
+                        <br>{{ analizy.citizen.age }} anos
+                        <br>{{ analizy.citizen.phoneNumber }}
+                    </td>
+                    <td align="center">
+                        <div class="btn-icon-split" style="background-color: #ff9600">
+                            <span class="icon"></span>
+                            <span class="text text-white" style="font-size: 14px">S2</span>
+                        </div>
+                    </td>
+                    <td>
+                        {{ analizy.date }}
+                    </td>
+                    <td>
+                        <ul>
+                            {% if analizy.citizen.age > 59 %}
+                            <li>Idoso</li>
+                            {% endif %}
+                            {% for risk in analizy.citizen.listRiskGroup.all %}
+                            <li>{{ risk }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td align="center">
+                        <div id="statusatual{{ analizy.id }}" style="display: block">
+                            {{ analizy.teleatend_status }}
+                        </div>
+                    </td>
+                    <td align="center">
+                        <div id="situacaoatual{{ analizy.id }}" style="display: block">
+                            <div class="btn btn-sm btn-primary btn-icon-split">
+                                <span class="text">{{ analizy.patient_situation }}</span>
+                            </div>
+                            <br>
+                        </div>
+                    </td>
+                    <td align="center">
+                        <a href="{% url 'atendimento:pages:triagem:view_citizen' analizy.id %}">
+                            <i class="fas fa-search"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+                {% for analizy in third_situation %}
+                <tr>
+
+                    <td>
+                        <strong>{{ analizy.citizen.name }}</strong>
+                        <br>{{ analizy.citizen.age }} anos
+                        <br>{{ analizy.citizen.phoneNumber }}
+                    </td>
+                    <td align="center" style="color: darkred">
+                        <div class="bg-warning btn-icon-split">
+                            <span class="icon"></span>
+                            <span class="text text-white" style="font-size: 14px">S3</span>
+                        </div>
+                    </td>
+                    <td>
+                        {{ analizy.date }}
+                    </td>
+                    <td>
+                        <ul>
+                            {% if analizy.citizen.age > 59 %}
+                            <li>Idoso</li>
+                            {% endif %}
+                            {% for risk in analizy.citizen.listRiskGroup.all %}
+                            <li>{{ risk }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td align="center">
+                        <div id="statusatual{{ analizy.id }}" style="display: block">
+                            {{ analizy.teleatend_status }}
+                        </div>
+                    </td>
+                    <td align="center">
+                        <div id="situacaoatual{{ analizy.id }}" style="display: block">
+                            <div class="btn btn-sm btn-primary btn-icon-split">
+                                <span class="text">{{ analizy.patient_situation }}</span>
+                            </div>
+                            <br>
+                        </div>
+                    </td>
+                    <td align="center">
+                        <a href="{% url 'atendimento:pages:triagem:view_citizen' analizy.id %}">
+                            <i class="fas fa-search"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+                {% for analizy in fourth_situation %}
+                <tr>
+
+                    <td>
+                        <strong>{{ analizy.citizen.name }}</strong>
+                        <br>{{ analizy.citizen.age }} anos
+                        <br>{{ analizy.citizen.phoneNumber }}
+                    </td>
+                    <td align="center" style="color: darkred">
+                        <div class=" btn-icon-split" style="background-color: rebeccapurple">
+                            <span class="icon"></span>
+                            <span class="text text-white" style="font-size: 14px">S4</span>
+                        </div>
+                    </td>
+                    <td>
+                        {{ analizy.date }}
+                    </td>
+                    <td>
+                        <ul>
+                            {% if analizy.citizen.age > 59 %}
+                            <li>Idoso</li>
+                            {% endif %}
+                            {% for risk in analizy.citizen.listRiskGroup.all %}
+                            <li>{{ risk }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td align="center">
+                        <div id="statusatual{{ analizy.id }}" style="display: block">
+                            {{ analizy.teleatend_status }}
+                        </div>
+                    </td>
+                    <td align="center">
+                        <div id="situacaoatual{{ analizy.id }}" style="display: block">
+                            <div class="btn btn-sm btn-primary btn-icon-split">
+                                <span class="text">{{ analizy.patient_situation }}</span>
+                            </div>
+                            <br>
+                        </div>
+                    </td>
+                    <td align="center">
+                        <a href="{% url 'atendimento:pages:triagem:view_citizen' analizy.id %}">
+                            <i class="fas fa-search"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+                {% for analizy in fifth_situation %}
+                <tr>
+
+                    <td>
+                        <strong>{{ analizy.citizen.name }}</strong>
+                        <br>{{ analizy.citizen.age }} anos
+                        <br>{{ analizy.citizen.phoneNumber }}
+                    </td>
+                    <td align="center" style="color: darkred">
+                        <div class="bg-secondary btn-icon-split">
+                            <span class="icon"></span>
+                            <span class="text text-white" style="font-size: 14px">S5</span>
+                        </div>
+                    </td>
+                    <td>
+                        {{ analizy.date }}
+                    </td>
+                    <td>
+                        <ul>
+                            {% if analizy.citizen.age > 59 %}
+                            <li>Idoso</li>
+                            {% endif %}
+                            {% for risk in analizy.citizen.listRiskGroup.all %}
+                            <li>{{ risk }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td align="center">
+                        <div id="statusatual{{ analizy.id }}" style="display: block">
+                            {{ analizy.teleatend_status }}
+                        </div>
+                    </td>
+                    <td align="center">
+                        <div id="situacaoatual{{ analizy.id }}" style="display: block">
+                            <div class="btn btn-sm btn-primary btn-icon-split">
+                                <span class="text">{{ analizy.patient_situation }}</span>
+                            </div>
+                            <br>
+                        </div>
+                    </td>
+                    <td align="center">
+                        <a href="{% url 'atendimento:pages:triagem:view_citizen' analizy.id %}">
+                            <i class="fas fa-search"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card-footer">
+        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+            <p><i class="fa fa-square"></i> Situação 1 (S1) = Febre ou Sintoma Respiratório + Contato com caso
+                confirmado</p>
+        </div>
+
+        <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #ff9600">
+            <p><i class="fa fa-square"></i> Situação 2 (S2) = Febre ou Sintoma Respiratório + Contato com caso
+                suspeito</p>
+        </div>
+
+        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+            <p><i class="fa fa-square"></i> Situação 3 (S3) = Febre ou Sintoma Respiratório + Não sabe se teve
+                contato</p>
+        </div>
+
+        <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: rebeccapurple">
+            <p><i class="fa fa-square"></i> Situação 4 (S4) = Assintomático + Contato com caso confirmado</p>
+        </div>
+
+        <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+            <p><i class="fa fa-square"></i> Situação 5 (S5) = Assintomático + Contato com caso suspeito</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable(
+            {
+                "order": [[2, 'desc']],
+                "language": {
+                    "search": "",
+                    "lengthMenu": "Exibir _MENU_ pacientes por página",
+                    "zeroRecords": "Nenhum dado encontrado",
+                    "info": "Exibindo pagina _PAGE_ de _PAGES_",
+                    "infoEmpty": "Sem Registros",
+                    "infoFiltered": "(Filtro aplicado em _MAX_ itens)",
+                    "paginate": {
+                        "previous": "Anterior",
+                        "next": "Próxima"
+                    }
+                }
+            }
+        );
+        $("[type='search']").addClass("form-control")
+        $("[type='search']").attr("placeholder", "Buscar...")
+
+    }
+    );
+</script>
+
+
+{% for sx in sex %}
+<script>
+    document.getElementById('sexo' + '{{ sx }}').setAttribute("selected", "true")
+</script>
+{% endfor %}
+
+{% for hc in hcenter %}
+<script>
+    document.getElementById('hcenter' + {{ hc }}).setAttribute("selected", "true")
+</script>
+{% endfor %}
+
+{% for nbh in nbhood %}
+<script>
+    document.getElementById('nbhood' + '{{ nbh }}').setAttribute("selected", "true")
+</script>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,1128 @@
+{% extends 'core/base/lautoy_base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<!-- Page Heading -->
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <div class="row col-lg-8 mb-7" style="width: 100%; ">
+        <ul class="nav nav-tabs">
+            <li class="nav-item" onclick="mudarView('boletim')" style="cursor: pointer;">
+                <a class="nav-link active" id="btnBoletim">Boletim e Histórico</a>
+            </li>
+            <li class="nav-item" onclick="mudarView('mobile')" style="cursor: pointer;">
+                <a class="nav-link" id="btnMobile">Análise de registros</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- Content Row -->
+
+<!-- Boletim Row -->
+<div class="row" id="rowBoletim" style="display: block; padding-top: 0px;">
+    <div class="col-md-12">
+        <div class="form-row">
+            <div class="col-md-9">
+                <!-- Illustrations -->
+                <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <div class="d-flex justify-content-center">
+                                <h3 class="m-0 font-weight-bold text-primary">Boletim diário municipal
+                                {% if profissional %}
+                                {% if profissional.city %}
+                                - {{profissional.city}}
+                                {% endif %}
+                                {% endif %}</h3>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <span class="m-0 font-weight-bold text-dark">{% if boletim.date_publication %}
+                                    {{ boletim.date_publication }}{% else %}{{ boletim.date }}{% endif %}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card-body">
+
+                                <div class="form-row">
+                                    <div class="form col-lg-6">
+                                        <div class="card border-left-info shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="row no-gutters align-items-center">
+                                                            <div class="col-4">
+                                                                <div class="h4 mb-0 mr-3 font-weight-bold text-gray-800">
+                                                                    {{ boletim.confirmed }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                            <h6>Confirmados</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form col-lg-6">
+                                        <div class="card border-left-secondary shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="h4 mb-0 font-weight-bold text-gray-800">
+                                                            {{ boletim.underInvestigation }}
+                                                        </div>
+                                                        <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                                                            <h6>Casos em Investigação</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="form-row">
+
+                                    <div class="form col-lg-6">
+                                        <div class="card border-left-danger shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="row no-gutters align-items-center">
+                                                            <div class="col-auto">
+                                                                <div class="h4 mb-0 mr-3 font-weight-bold text-gray-800">
+                                                                    {{ boletim.deaths }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                            <h6>óbitos</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form col-lg-6">
+
+                                        <div class="card border-left-warning shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="h4 mb-0 font-weight-bold text-gray-800">
+                                                            {{ boletim.waiting_exam }}
+                                                        </div>
+                                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                            <h6>Aguardando exame</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form col-lg-6">
+                                        <div class="card border-left-success shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+
+                                                        <div class="h4 mb-0 font-weight-bold text-gray-800">{{ boletim.recovered }}
+                                                        </div>
+                                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                            <h6>Recuperados</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form col-lg-6">
+                                        <div class="card border-left-primary shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="h4 mb-0 font-weight-bold text-gray-800">{{ boletim.discarded }}
+                                                        </div>
+                                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                            <h6>Descartados</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+
+                                    <div class="form col-lg-6">
+                                        <div class="card border-left-danger shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="row no-gutters align-items-center">
+                                                            <div class="col-auto">
+                                                                <div class="h4 mb-0 mr-3 font-weight-bold text-gray-800">
+                                                                    {{ boletim.homeIsolation }}
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                            <h6>Isolamentos Domiciliares</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form col-lg-6">
+
+                                        <div class="card border-left-warning shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="h4 mb-0 font-weight-bold text-gray-800">
+                                                            {{ boletim.hospitalStay }}
+                                                        </div>
+                                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                            <h6>Internamentos Hospitalares</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                            <div class="d-flex justify-content-center">
+                                <h4 class="m-0 font-weight-bold text-primary">Exames Laboratoriais</h4>
+                            </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form col-lg-12">
+                                <div class="card border-left-success shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                    <div class="h2 mb-0 font-weight-bold text-gray-800">{{ boletim.testsCounty }}
+                                                    </div>
+                                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                        <h4>Laboratório Municipal</h4>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form col-lg-12">
+                                <div class="card border-left-warning shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="h2 mb-0 font-weight-bold text-gray-800">{{ boletim.testsLacen }}
+                                                </div>
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    <h4>Lacen Pernambuco</h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form col-lg-12">
+                                <div class="card border-left-danger shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="h2 mb-0 font-weight-bold text-gray-800">{{ boletim.testsPrivate }}
+                                                </div>
+                                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                    <h4>Particulares</h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-lg-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <div class="d-flex justify-content-center">
+                            <h3 class="m-0 font-weight-bold text-primary">Histórico de notificações</h3>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <span class="m-0 font-weight-bold text-dark"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- Area Chart -->
+                        <div class="col-xl-8 col-lg-7">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Casos acumulados</h6>
+
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-area">
+                                        <canvas id="myAreaChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pie Chart -->
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="card shadow mb-4">
+                                <!-- Card Header - Dropdown -->
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Confirmados x Óbitos</h6>
+
+                                </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <div class="chart-area">
+                                        <canvas id="myPieChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+        </div>
+    </div>
+</div>
+    
+
+<div class="row" id="rowHistorico">
+
+    <div class="col-lg-12 mb-7">
+
+        <!-- Illustrations -->
+        
+    </div>
+</div>
+
+
+<!-- Mapa Wow -->
+<div class="row" id="aplicacaoMobile">
+
+    <div class="col-lg-12 mb-7">
+
+        <!-- Illustrations -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="d-flex justify-content-center">
+                    <h3 class="m-0 font-weight-bold text-primary">Análise de registros
+                    {% if profissional %}
+                    {% if profissional.city %}
+                    - {{profissional.city}}
+                    {% endif %}
+                    {% for hc in healthcenters%}
+                    - {{hc}}
+                    {% endfor %}
+                    {% endif %}
+                    </h3>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <span class="m-0 font-weight-bold text-dark"></span>
+                </div>
+            </div>
+
+            {% block filtros_searche %}
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="row col-md-12">
+
+                            <h4>Filtros:</h4>
+
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col" style="z-index: 1001;">
+                            <select name="sex" class="selectpicker form-control" data-live-search="true"
+                                data-provide="selectpicker" data-size="10" id="id_situacaoFilter" multiple=""
+                                tabindex="-98" multiple title="Situação">
+                                <optgroup label="Situação">
+                                    <option id="situacao1" selected value="1">Situação 1</option>
+                                    <option id="situacao2" selected value="2">Situação 2</option>
+                                    <option id="situacao3" selected value="3">Situação 3</option>
+                                    <option id="situacao4" selected value="4">Situação 4</option>
+                                    <option id="situacao5" selected value="5">Situação 5</option>
+                                </optgroup>
+                            </select>
+                        </div>
+
+                        <div class="col">
+                            <div class="input-group">
+                                <button class="btn btn-primary"
+                                    style="vertical-align: middle; text-align: center; margin: 0px;" type="text"
+                                    onclick="filterMap()">
+                                    <i class="fas fa-filter" style="font-size: 20px; color: white;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% endblock %}
+
+            <div class="form-row">
+
+                <div class="col-xl-12 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="text-xs font-weight-bold text-danger text-uppercase mb-1 pr-2 filterAtalho" 
+                            onclick="atalhoFilter(1)" style="cursor: pointer;">
+                            <i class='fa fa-square'></i> 
+                            Situação 1 (S1) = Febre ou Sintoma Respiratório + Contato com caso confirmado
+                            </h6>
+                            <h6 class="text-xs font-weight-bold text-uppercase mb-1 pr-2 filterAtalho" style="color: #ff4500; cursor: pointer;"
+                            onclick="atalhoFilter(2)">
+                            <i class='fa fa-square'></i> 
+                            Situação 2 (S2) = Febre ou Sintoma Respiratório +
+                                    Contato com caso
+                                    suspeito
+                            </h6>
+                            
+                            <h6 class="text-xs font-weight-bold text-warning text-uppercase mb-1 pr-2 filterAtalho"
+                            onclick="atalhoFilter(3)" style="cursor: pointer;">
+                            <i class='fa fa-square'></i> 
+                            Situação 3 (S3) = Febre ou Sintoma Respiratório +
+                                    Não
+                                    sabe se teve
+                                    contato
+                            </h6>
+
+                            <h6 class="text-xs font-weight-bold text-uppercase mb-1 pr-2 filterAtalho" style="color: #800080; cursor: pointer;"
+                            onclick="atalhoFilter(4)">
+                            <i class='fa fa-square'></i> 
+                            Situação 4 (S4) = Contato com caso
+                                    confirmado
+                            </h6>
+
+                            <h6 class="text-xs font-weight-bold text-secondary text-uppercase mb-1 filterAtalho"
+                            onclick="atalhoFilter(5)" style="cursor: pointer;">
+                            <i class='fa fa-square'></i> 
+                            Situação 5 (S5) = Contato com caso
+                                    suspeito
+                            </h6>
+                            <div class="dropright no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    style="color: #d1d3e2!important;">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                    aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Mapa:</div>
+                                    <a class="dropdown-item" style="cursor: pointer;" onclick="addRemoveHeatMap()">Mapa
+                                        de calor <i class="fa_heatmap fa fa-check" id="addRemoveHeat"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <div id="map"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!--  -->
+
+            <div class='form-row'>
+            <!-- Porc group riscos -->
+                <div class="col-xl-6 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Grupos de risco</h6>
+
+                        </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                            <div class="chart-area col-xl-6 float-left">
+                                <canvas id="myPieChart2"></canvas>
+                            </div>
+                            <div class="text-xs text-uppercase mt-10 col-xl-6 float-left align-self-center"
+                            style='margin-top: 30px;'>
+                            
+                                <table id='tb_legendPieRisk'>
+                                    <th></th>
+                                    <th>Grupo</th>
+                                    <th>Quantidade</th>
+                                </table>
+                            
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-lg-7">
+
+                    <!-- Bar Chart -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold text-primary">Casos analisados por situação</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar">
+                                <canvas id="myBarChartSituations"></canvas>
+                            </div>
+                        </div>
+                        {% comment %} <div class="card-footer">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                <p><i class='fa fa-square'></i> Situação 1 (S1) = Febre ou Sintoma Respiratório +
+                                    Contato com caso
+                                    confirmado</p>
+                            </div>
+
+                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #ff4500;">
+                                <p><i class='fa fa-square'></i> Situação 2 (S2) = Febre ou Sintoma Respiratório +
+                                    Contato com caso
+                                    suspeito</p>
+                            </div>
+
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                <p><i class='fa fa-square'></i> Situação 3 (S3) = Febre ou Sintoma Respiratório +
+                                    Não
+                                    sabe se teve
+                                    contato</p>
+                            </div>
+
+                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #800080;">
+                                <p><i class='fa fa-square'></i> Situação 4 (S4) = Assintomático + Contato com caso
+                                    confirmado</p>
+                            </div>
+
+                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                                <p><i class='fa fa-square'></i> Situação 5 (S5) = Assintomático + Contato com caso
+                                    suspeito</p>
+                            </div>
+                        </div> {% endcomment %}
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-xl-6 col-lg-7">
+                    <!-- Bar Chart -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold text-primary">Casos analisados por faixa etária</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar">
+                                <canvas id="myBarChartAge"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-lg-7">
+
+                    <!-- Bar Chart -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h5 class="m-0 font-weight-bold text-primary">Casos analisados por sexo</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-bar">
+                                <canvas id="myBarChartSex"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- /.container-fluid -->
+
+
+    {% endblock %}
+
+    {% block extra_js %}
+    <!-- Mapa -->
+    <script src="{% static 'core/js/heatmap/leaflet-heat.js' %}"></script>
+    <script src="{% static 'core/js/heatmap.js' %}?v=1.1"></script>
+    <script src="{% static 'core/js/index.js' %}?v=1.1"></script>
+    <!-- graphs scripts -->
+    <script src="{% static 'core/js/lineChart.js' %}?v=1.1"></script>
+    <script src="{% static 'core/js/pieCharts.js' %}?v=1.1"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="{% static 'core/js/graphColumn.js' %}?v=1.1"></script>
+    <script type="text/javascript" src="{% static 'core/js/barChartGraph.js' %}?v=1.1"></script>
+
+    <script>
+        
+        // Pizza notificações boletim
+        var valuesPie1 = [];
+        valuesPie1.push({{ boletim.confirmed }});
+        valuesPie1.push({{ boletim.deaths }});
+
+        preencherPie(valuesPie1);
+
+
+        {% for analisy in list_analisys.first_situation %}
+        {% if analisy.latLng is not None %}
+        preencherHeatmap(
+            '{{ analisy.latLng.lat }}',
+            '{{ analisy.latLng.lng }}',
+            '{{analisy.citizen.sex}}',
+            '{{ analisy.citizen.age }}',
+            '{{analisy.citizen.name}}',
+            'first'
+        );
+        {% endif %}
+        {% endfor %}
+
+        {% for analisy in list_analisys.second_situation %}
+        {% if analisy.latLng is not None %}
+        preencherHeatmap(
+            '{{ analisy.latLng.lat }}',
+            '{{ analisy.latLng.lng }}',
+            '{{analisy.citizen.sex}}',
+            '{{ analisy.citizen.age }}',
+            '{{analisy.citizen.name}}',
+            'second'
+        );
+        {% endif %}
+        {% endfor %}
+
+        {% for analisy in list_analisys.third_situation %}
+        {% if analisy.latLng is not None %}
+        preencherHeatmap(
+            '{{ analisy.latLng.lat }}',
+            '{{ analisy.latLng.lng }}',
+            '{{analisy.citizen.sex}}',
+            '{{ analisy.citizen.age }}',
+            '{{analisy.citizen.name}}',
+            'third'
+        );
+        {% endif %}
+        {% endfor %}
+
+        {% for analisy in list_analisys.fourth_situation %}
+        {% if analisy.latLng is not None %}
+        preencherHeatmap(
+            '{{ analisy.latLng.lat }}',
+            '{{ analisy.latLng.lng }}',
+            '{{analisy.citizen.sex}}',
+            '{{ analisy.citizen.age }}',
+            '{{analisy.citizen.name}}',
+            'fourth'
+        );
+        {% endif %}
+        {% endfor %}
+
+        {% for analisy in list_analisys.fifth_situation %}
+        {% if analisy.latLng is not None %}
+        preencherHeatmap(
+            {{ analisy.latLng.lat }},
+            {{ analisy.latLng.lng }},
+            '{{analisy.citizen.sex}}',
+            {{ analisy.citizen.age }},
+            '{{analisy.citizen.name}}',
+            'fifth'
+        );
+        {% endif %}
+        {% endfor %}
+
+
+        document.getElementById('aplicacaoMobile').style.display = 'none';
+
+        {% for countsFirst in countPerRiskGroup.first_situation_riskGroup %}
+
+        adicionarLabelsPie2('{{countsFirst.citizen__listRiskGroup__name}}', {{ countsFirst.dcount }}, 'first')
+
+        
+        {% endfor %}
+
+        {% for countsSecond in countPerRiskGroup.second_situation_riskGroup %}
+
+        adicionarLabelsPie2('{{countsSecond.citizen__listRiskGroup__name}}', {{ countsSecond.dcount }}, 'second')
+
+        {% endfor %}
+
+        {% for countsThird in countPerRiskGroup.third_situation_riskGroup %}
+
+        adicionarLabelsPie2('{{countsThird.citizen__listRiskGroup__name}}', {{ countsThird.dcount }}, 'third')
+
+        {% endfor %}
+
+        {% for countsFourth in countPerRiskGroup.fourth_situation_riskGroup %}
+
+        adicionarLabelsPie2('{{countsFourth.citizen__listRiskGroup__name}}', {{ countsFourth.dcount }}, 'fourth')
+
+        {% endfor %}
+
+        {% for countsFifth in countPerRiskGroup.fifth_situation_riskGroup %}
+
+        adicionarLabelsPie2('{{countsFifth.citizen__listRiskGroup__name}}', {{ countsFifth.dcount }}, 'fifth')
+
+        {% endfor %}
+
+        
+
+         
+        //Remove None values
+        for (let index = 0; index < labels.length; index++) {
+            if (labels[index] == "None") {
+                labels.splice(index, 1);
+                values.splice(index, 1);
+            }
+        } preencherPie2(labels, values); 
+        
+        {% for confirmedDNL in dictDNL.confirmedsDNL %}
+        {% if confirmedDNL.date_publication %}
+        insertLabels('{{confirmedDNL.date_publication | date:"d/m"}}');
+        {% else %}
+        insertLabels('{{confirmedDNL.date | date:"d/m"}}');
+        {% endif %}
+        insertDataset({{ confirmedDNL.confirmed }}, 'confirmeds');
+        {% endfor %}
+
+        {% for deathDNL in dictDNL.deathsDNL %}
+        //insertLabels('{{deathDNL.date | date:"d/m"}}');
+        insertDataset({{ deathDNL.deaths }}, 'deaths');
+        {% endfor %}
+
+        {% for recoveredDNL in dictDNL.recoveredDNL %}
+        insertDataset({{ recoveredDNL.recovered }}, 'recovered')
+        {% endfor %}
+
+
+        setGraphAge(
+            {{ dictABAG.first_situation_age.firstCase }} + {{ dictABAG.second_situation_age.firstCase }} + {{ dictABAG.third_situation_age.firstCase }} + {{ dictABAG.fourth_situation_age.firstCase }} + {{ dictABAG.fifth_situation_age.firstCase }},
+            {{ dictABAG.first_situation_age.secondCase }} + {{ dictABAG.second_situation_age.secondCase }} + {{ dictABAG.third_situation_age.secondCase }} + {{ dictABAG.fourth_situation_age.secondCase }} + {{ dictABAG.fifth_situation_age.secondCase }},
+            {{ dictABAG.first_situation_age.thirdCase }} + {{ dictABAG.second_situation_age.thirdCase }} + {{ dictABAG.third_situation_age.thirdCase }} + {{ dictABAG.fourth_situation_age.thirdCase }} + {{ dictABAG.fifth_situation_age.thirdCase }},
+            {{ dictABAG.first_situation_age.fourthCase }} + {{ dictABAG.second_situation_age.fourthCase }} + {{ dictABAG.third_situation_age.fourthCase }} + {{ dictABAG.fourth_situation_age.fourthCase }} + {{ dictABAG.fifth_situation_age.fourthCase }},
+        );
+        
+        var countSexMale =  {{dictQBG.first_situation_male}} + {{dictQBG.second_situation_male}} + {{dictQBG.third_situation_male}} + {{dictQBG.fourth_situation_male}} + {{dictQBG.fifth_situation_male}};
+        var countSexFemale =  {{dictQBG.first_situation_female}} + {{dictQBG.second_situation_female}} + {{dictQBG.third_situation_female}} + {{dictQBG.fourth_situation_female}} + {{dictQBG.fifth_situation_female}};
+        
+        setGraphSex(
+            countSexFemale,
+            countSexMale,
+        );
+        setGraphSituations(
+            '{{ dictCBS.first_situation }}',
+            '{{ dictCBS.second_situation }}',
+            '{{ dictCBS.third_situation }}',
+            '{{ dictCBS.fourth_situation }}',
+            '{{ dictCBS.fifth_situation }}',
+        );
+    </script>
+
+    <script>
+    legendPieRisk = document.getElementById('tb_legendPieRisk');
+        for(index = 0; index<labels.length;index++){
+            legendPieRisk.innerHTML += "<tr style='border-bottom:5px solid white;'><td style='background-color:"+myPieChart2.data.datasets[0].backgroundColor[index]+";width:15px'></td><td>"+labels[index]+"</td><td style='text-align: right;'>"+values[index]+"</td></tr>"
+        }
+        function filterMap() {
+            var situacao1 = document.getElementById('situacao1').selected;
+            var situacao2 = document.getElementById('situacao2').selected;
+            var situacao3 = document.getElementById('situacao3').selected;
+            var situacao4 = document.getElementById('situacao4').selected;
+            var situacao5 = document.getElementById('situacao5').selected;
+
+
+            if (situacao1) {
+                addHeatPoints(1);
+                
+                if(!first_sex){
+                    myBarChartSex.data.datasets[0].data[0] = myBarChartSex.data.datasets[0].data[0] + {{dictQBG.first_situation_female}}
+                    myBarChartSex.data.datasets[0].data[1] = myBarChartSex.data.datasets[0].data[1] + {{dictQBG.first_situation_male}} 
+                    
+                    first_sex = true;
+                }
+
+                if(!first_risk){
+                    {% for countsFirst in countPerRiskGroup.first_situation_riskGroup %}
+                    addValuesPie2('{{countsFirst.citizen__listRiskGroup__name}}', {{ countsFirst.dcount }});
+                    {% endfor %}
+                    
+                    first_risk = true;
+                }
+
+                if(!first_age){
+                    myBarChartAge.data.datasets[0].data[0] = myBarChartAge.data.datasets[0].data[0] + {{ dictABAG.first_situation_age.firstCase }};
+                    myBarChartAge.data.datasets[0].data[1] = myBarChartAge.data.datasets[0].data[1] + {{ dictABAG.first_situation_age.secondCase }};
+                    myBarChartAge.data.datasets[0].data[2] = myBarChartAge.data.datasets[0].data[2] + {{ dictABAG.first_situation_age.thirdCase }};
+                    myBarChartAge.data.datasets[0].data[3] = myBarChartAge.data.datasets[0].data[3] + {{ dictABAG.first_situation_age.fourthCase }};
+
+                    first_age = true;
+                }
+            }
+            else {
+                removeHeatPoints(1);
+                
+                if(first_sex){
+                    myBarChartSex.data.datasets[0].data[0] = myBarChartSex.data.datasets[0].data[0] - {{dictQBG.first_situation_female}}
+                    myBarChartSex.data.datasets[0].data[1] = myBarChartSex.data.datasets[0].data[1] - {{dictQBG.first_situation_male}} 
+                
+                    first_sex = false;
+                }
+
+                if(first_risk){
+                    {% for countsFirst in countPerRiskGroup.first_situation_riskGroup %}
+                    removeValuesPie2('{{countsFirst.citizen__listRiskGroup__name}}', {{ countsFirst.dcount }});
+                    {% endfor %}
+                    
+                    first_risk = false;
+                }
+
+                if(first_age){
+                    myBarChartAge.data.datasets[0].data[0] = myBarChartAge.data.datasets[0].data[0] - {{ dictABAG.first_situation_age.firstCase }};
+                    myBarChartAge.data.datasets[0].data[1] = myBarChartAge.data.datasets[0].data[1] - {{ dictABAG.first_situation_age.secondCase }};
+                    myBarChartAge.data.datasets[0].data[2] = myBarChartAge.data.datasets[0].data[2] - {{ dictABAG.first_situation_age.thirdCase }};
+                    myBarChartAge.data.datasets[0].data[3] = myBarChartAge.data.datasets[0].data[3] - {{ dictABAG.first_situation_age.fourthCase }};
+
+                    first_age = false;
+                }
+            }
+
+            if (situacao2) {
+                addHeatPoints(2);
+                
+                if(!second_sex){
+                    myBarChartSex.data.datasets[0].data[0] = myBarChartSex.data.datasets[0].data[0] + {{dictQBG.second_situation_female}}
+                    myBarChartSex.data.datasets[0].data[1] = myBarChartSex.data.datasets[0].data[1] + {{dictQBG.second_situation_male}} 
+                    
+                    second_sex = true;
+                }
+
+                if(!second_risk){
+                    {% for countsSecond in countPerRiskGroup.second_situation_riskGroup %}
+                    addValuesPie2('{{countsSecond.citizen__listRiskGroup__name}}', {{ countsSecond.dcount }})
+                    {% endfor %}
+                    
+                    second_risk = true;
+                }
+
+                if(!second_age){
+                    myBarChartAge.data.datasets[0].data[0] = myBarChartAge.data.datasets[0].data[0] + {{ dictABAG.second_situation_age.firstCase }};
+                    myBarChartAge.data.datasets[0].data[1] = myBarChartAge.data.datasets[0].data[1] + {{ dictABAG.second_situation_age.secondCase }};
+                    myBarChartAge.data.datasets[0].data[2] = myBarChartAge.data.datasets[0].data[2] + {{ dictABAG.second_situation_age.thirdCase }};
+                    myBarChartAge.data.datasets[0].data[3] = myBarChartAge.data.datasets[0].data[3] + {{ dictABAG.second_situation_age.fourthCase }};
+
+                    second_age = true;
+                }
+
+                
+            }
+            else {
+                removeHeatPoints(2);
+
+                if(second_sex){
+                    myBarChartSex.data.datasets[0].data[0] = myBarChartSex.data.datasets[0].data[0] - {{dictQBG.second_situation_female}}
+                    myBarChartSex.data.datasets[0].data[1] = myBarChartSex.data.datasets[0].data[1] - {{dictQBG.second_situation_male}} 
+                
+                    second_sex = false;
+                    
+                }
+
+                if(second_risk){
+                    {% for countsSecond in countPerRiskGroup.second_situation_riskGroup %}
+                    removeValuesPie2('{{countsSecond.citizen__listRiskGroup__name}}', {{ countsSecond.dcount }})
+
+                    {% endfor %}
+                    
+                    second_risk = false;
+                }
+
+                if(second_age){
+                    myBarChartAge.data.datasets[0].data[0] = myBarChartAge.data.datasets[0].data[0] - {{ dictABAG.second_situation_age.firstCase }};
+                    myBarChartAge.data.datasets[0].data[1] = myBarChartAge.data.datasets[0].data[1] - {{ dictABAG.second_situation_age.secondCase }};
+                    myBarChartAge.data.datasets[0].data[2] = myBarChartAge.data.datasets[0].data[2] - {{ dictABAG.second_situation_age.thirdCase }};
+                    myBarChartAge.data.datasets[0].data[3] = myBarChartAge.data.datasets[0].data[3] - {{ dictABAG.second_situation_age.fourthCase }};
+
+
+                    second_age = false;
+                }
+            }
+
+            if (situacao3) {
+                addHeatPoints(3);
+
+                if(!third_sex){
+                    myBarChartSex.data.datasets[0].data[0] = myBarChartSex.data.datasets[0].data[0] + {{dictQBG.third_situation_female}};
+                    myBarChartSex.data.datasets[0].data[1] = myBarChartSex.data.datasets[0].data[1] + {{dictQBG.third_situation_male}};
+                
+                    third_sex = true;
+                }
+
+                if(!third_risk){
+                    {% for countsThird in countPerRiskGroup.third_situation_riskGroup %}
+                    addValuesPie2('{{countsThird.citizen__listRiskGroup__name}}', {{ countsThird.dcount }})                   
+                    {% endfor %}
+                    
+                    third_risk = true;
+                }
+
+                if(!third_age){
+                    myBarChartAge.data.datasets[0].data[0] = myBarChartAge.data.datasets[0].data[0] + {{ dictABAG.third_situation_age.firstCase }};
+                    myBarChartAge.data.datasets[0].data[1] = myBarChartAge.data.datasets[0].data[1] + {{ dictABAG.third_situation_age.secondCase }};
+                    myBarChartAge.data.datasets[0].data[2] = myBarChartAge.data.datasets[0].data[2] + {{ dictABAG.third_situation_age.thirdCase }};
+                    myBarChartAge.data.datasets[0].data[3] = myBarChartAge.data.datasets[0].data[3] + {{ dictABAG.third_situation_age.fourthCase }};
+
+                    third_age = true;
+                }
+            }
+            else {
+                removeHeatPoints(3);
+
+                if(third_sex){
+                    myBarChartSex.data.datasets[0].data[0] = myBarChartSex.data.datasets[0].data[0] - {{dictQBG.third_situation_female}};
+                    myBarChartSex.data.datasets[0].data[1] = myBarChartSex.data.datasets[0].data[1] - {{dictQBG.third_situation_male}}; 
+                
+                    third_sex = false;
+                    
+                }
+
+                if(third_risk){
+                    {% for countsThird in countPerRiskGroup.third_situation_riskGroup %}
+                    removeValuesPie2('{{countsThird.citizen__listRiskGroup__name}}', {{ countsThird.dcount }})
+                    {% endfor %}
+
+                    third_risk = false;
+                }
+
+                if(third_age){
+                    myBarChartAge.data.datasets[0].data[0] = myBarChartAge.data.datasets[0].data[0] - {{ dictABAG.third_situation_age.firstCase }};
+                    myBarChartAge.data.datasets[0].data[1] = myBarChartAge.data.datasets[0].data[1] - {{ dictABAG.third_situation_age.secondCase }};
+                    myBarChartAge.data.datasets[0].data[2] = myBarChartAge.data.datasets[0].data[2] - {{ dictABAG.third_situation_age.thirdCase }};
+                    myBarChartAge.data.datasets[0].data[3] = myBarChartAge.data.datasets[0].data[3] - {{ dictABAG.third_situation_age.fourthCase }};
+
+                    third_age = false;
+                }
+            }
+
+            if (situacao4) {
+                addHeatPoints(4);
+
+                if(!fourth_sex){
+                    myBarChartSex.data.datasets[0].data[0] = myBarChartSex.data.datasets[0].data[0] + {{dictQBG.fourth_situation_female}}
+                    myBarChartSex.data.datasets[0].data[1] = myBarChartSex.data.datasets[0].data[1] + {{dictQBG.fourth_situation_male}} 
+                
+                    fourth_sex = true;
+                   
+                }
+
+                if(!fourth_risk){
+                    {% for countsFourth in countPerRiskGroup.fourth_situation_riskGroup %}
+                    addValuesPie2('{{countsFourth.citizen__listRiskGroup__name}}', {{ countsFourth.dcount }})                   
+                    {% endfor %}
+                    
+                    fourth_risk = true;
+                }
+
+                if(!fourth_age){
+                    myBarChartAge.data.datasets[0].data[0] = myBarChartAge.data.datasets[0].data[0] + {{ dictABAG.fourth_situation_age.firstCase }};
+                    myBarChartAge.data.datasets[0].data[1] = myBarChartAge.data.datasets[0].data[1] + {{ dictABAG.fourth_situation_age.secondCase }};
+                    myBarChartAge.data.datasets[0].data[2] = myBarChartAge.data.datasets[0].data[2] + {{ dictABAG.fourth_situation_age.thirdCase }};
+                    myBarChartAge.data.datasets[0].data[3] = myBarChartAge.data.datasets[0].data[3] + {{ dictABAG.fourth_situation_age.fourthCase }};
+
+                    fourth_age = true;
+                }
+            }
+            else {
+                removeHeatPoints(4);
+                if(fourth_sex){
+                    myBarChartSex.data.datasets[0].data[0] = myBarChartSex.data.datasets[0].data[0] - {{dictQBG.fourth_situation_female}}
+                    myBarChartSex.data.datasets[0].data[1] = myBarChartSex.data.datasets[0].data[1] - {{dictQBG.fourth_situation_male}} 
+                
+                    fourth_sex = false;
+                }
+
+                if(fourth_risk){
+                    {% for countsFourth in countPerRiskGroup.fourth_situation_riskGroup %}
+                    removeValuesPie2('{{countsFourth.citizen__listRiskGroup__name}}', {{ countsFourth.dcount }})                   
+                    {% endfor %}
+                    
+                    fourth_risk = false;
+                }
+
+                if(fourth_age){
+                    myBarChartAge.data.datasets[0].data[0] = myBarChartAge.data.datasets[0].data[0] - {{ dictABAG.fourth_situation_age.firstCase }};
+                    myBarChartAge.data.datasets[0].data[1] = myBarChartAge.data.datasets[0].data[1] - {{ dictABAG.fourth_situation_age.secondCase }};
+                    myBarChartAge.data.datasets[0].data[2] = myBarChartAge.data.datasets[0].data[2] - {{ dictABAG.fourth_situation_age.thirdCase }};
+                    myBarChartAge.data.datasets[0].data[3] = myBarChartAge.data.datasets[0].data[3] - {{ dictABAG.fourth_situation_age.fourthCase }};
+
+                    fourth_age = false;
+                }
+            }
+
+            if (situacao5) {
+                addHeatPoints(5);
+                if(!fifth_sex){
+                    myBarChartSex.data.datasets[0].data[0] = myBarChartSex.data.datasets[0].data[0] + {{dictQBG.fifth_situation_female}}
+                    myBarChartSex.data.datasets[0].data[1] = myBarChartSex.data.datasets[0].data[1] + {{dictQBG.fifth_situation_male}} 
+                
+                    fifth_sex = true;
+                }
+
+                if(!fifth_risk){
+                    {% for countsFifth in countPerRiskGroup.fifth_situation_riskGroup %}
+                    addValuesPie2('{{countsFifth.citizen__listRiskGroup__name}}', {{ countsFifth.dcount }})                   
+                    {% endfor %}
+                    
+                    fifth_risk = true;
+                }
+
+                if(!fifth_age){
+                    myBarChartAge.data.datasets[0].data[0] = myBarChartAge.data.datasets[0].data[0] + {{ dictABAG.fifth_situation_age.firstCase }};
+                    myBarChartAge.data.datasets[0].data[1] = myBarChartAge.data.datasets[0].data[1] + {{ dictABAG.fifth_situation_age.secondCase }};
+                    myBarChartAge.data.datasets[0].data[2] = myBarChartAge.data.datasets[0].data[2] + {{ dictABAG.fifth_situation_age.thirdCase }};
+                    myBarChartAge.data.datasets[0].data[3] = myBarChartAge.data.datasets[0].data[3] + {{ dictABAG.fifth_situation_age.fourthCase }};
+
+                    fifth_age = true;
+                }
+            }
+            else {
+                removeHeatPoints(5);
+                if(!fifth_sex){
+                    myBarChartSex.data.datasets[0].data[0] = myBarChartSex.data.datasets[0].data[0] - {{dictQBG.fifth_situation_female}}
+                    myBarChartSex.data.datasets[0].data[1] = myBarChartSex.data.datasets[0].data[1] - {{dictQBG.fifth_situation_male}} 
+                
+                    fifth_sex = false;
+                }
+
+                if(fifth_risk){
+                    {% for countsFifth in countPerRiskGroup.fifth_situation_riskGroup %}
+                    removeValuesPie2('{{countsFifth.citizen__listRiskGroup__name}}', {{ countsFifth.dcount }})                   
+                    {% endfor %}
+                    
+                    fifth_risk = false;
+                }
+
+                if(fifth_age){
+                    myBarChartAge.data.datasets[0].data[0] = myBarChartAge.data.datasets[0].data[0] - {{ dictABAG.fifth_situation_age.firstCase }};
+                    myBarChartAge.data.datasets[0].data[1] = myBarChartAge.data.datasets[0].data[1] - {{ dictABAG.fifth_situation_age.secondCase }};
+                    myBarChartAge.data.datasets[0].data[2] = myBarChartAge.data.datasets[0].data[2] - {{ dictABAG.fifth_situation_age.thirdCase }};
+                    myBarChartAge.data.datasets[0].data[3] = myBarChartAge.data.datasets[0].data[3] - {{ dictABAG.fifth_situation_age.fourthCase }};
+
+                    fifth_age = false;
+                }
+            }
+
+            myBarChartSex.update();
+            myPieChart2.update();
+            myBarChartAge.update();
+
+            legendPieRisk.innerHTML = "<tr><th></th><th>Grupo</th><th>Quantidade</th></tr>";
+            for(index = 0; index<labels.length;index++){
+                if(values[index]>0){
+                    legendPieRisk.innerHTML += "<tr style='border-bottom:5px solid white;'><td style='background-color:"+myPieChart2.data.datasets[0].backgroundColor[index]+";width:15px'></td><td>"+labels[index]+"</td><td style='text-align: right;'>"+values[index]+"</td></tr>"
+                }
+            }
+
+        }
+
+        function atalhoFilter(type){
+            var situacao1 = document.getElementById('situacao1');
+            var situacao2 = document.getElementById('situacao2');
+            var situacao3 = document.getElementById('situacao3');
+            var situacao4 = document.getElementById('situacao4');
+            var situacao5 = document.getElementById('situacao5');
+            if(type == 1){
+
+                situacao1.selected = true;
+                situacao2.selected = false;
+                situacao3.selected = false;
+                situacao4.selected = false;
+                situacao5.selected = false;
+
+                filterMap();
+
+            }
+            if(type == 2){
+                situacao1.selected = false;
+                situacao2.selected = true;
+                situacao3.selected = false;
+                situacao4.selected = false;
+                situacao5.selected = false;
+                
+                filterMap();
+            }
+            if(type == 3){
+                situacao1.selected = false;
+                situacao2.selected = false;
+                situacao3.selected = true;
+                situacao4.selected = false;
+                situacao5.selected = false;
+
+                filterMap();
+            }
+            if(type == 4){
+                situacao1.selected = false;
+                situacao2.selected = false;
+                situacao3.selected = false;
+                situacao4.selected = true;
+                situacao5.selected = false;
+
+                filterMap();
+            }
+            if(type == 5){
+                situacao1.selected = false;
+                situacao2.selected = false;
+                situacao3.selected = false;
+                situacao4.selected = false;
+                situacao5.selected = true;
+
+                filterMap();
+            }
+
+            $('.selectpicker').selectpicker('refresh');
+        }
+    </script>
+    {% endblock %}

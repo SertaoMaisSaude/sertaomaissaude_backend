@@ -1,0 +1,646 @@
+{% extends 'core/base/lautoy_base.html' %}
+{% load static %}
+
+
+{% block extra_css %}
+<!-- <link rel="stylesheet" href="{% static 'core/css/show-info.css' %}"> -->
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Análises</h1>
+    </div>
+
+    <div class="dropdown show">
+        <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" href="#" role="button"
+            id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-download fa-sm text-white-50"></i>Gerar Relatório
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            {% if search_list %}
+            <a href="export?{% if search %}search={{search}}{% endif %}{% if sex %}{% for sx in sex %}&sex={{sx}}{% endfor %}{% endif %}{% if hcenter %}{% for hc in hcenter %}&hcenter={{hc}}{% endfor %}{% endif %}{% if nbhood %}{% for nbh in nbhood %}&nbhood={{nbh}}{% endfor %}{% endif %}{% if date %}&date={{date}}{% endif %}"
+                class="dropdown-item" data-toggle="tooltip" data-placement="top" title="Exportar para XLS"><i
+                    class="fa fa-file-excel mr-2 text-success"></i>Exportar para Excel 
+            </a>
+            <a href="export_pdf?{% if search %}search={{search}}{% endif %}{% if sex %}{% for sx in sex %}&sex={{sx}}{% endfor %}{% endif %}{% if hcenter %}{% for hc in hcenter %}&hcenter={{hc}}{% endfor %}{% endif %}{% if nbhood %}{% for nbh in nbhood %}&nbhood={{nbh}}{% endfor %}{% endif %}{% if date %}&date={{date}}{% endif %}"
+                class="dropdown-item" data-toggle="tooltip" data-placement="top" title="Exportar para XLS"><i
+                    class="fa fa-file-pdf mr-2 text-danger"></i>Exportar para PDF
+            </a>
+            {% else %}
+            <a href="export" class="dropdown-item" data-toggle="tooltip" data-placement="top"
+                title="Exportar para XLS"><i class="fa fa-file-excel mr-2 text-success"></i>Exportar para Excel
+            </a>
+
+            <a href="export_pdf" class="dropdown-item" data-toggle="tooltip" data-placement="top"
+                title="Exportar para XLS"><i class="fa fa-file-pdf mr-2 text-danger"></i>Exportar para PDF
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+
+</div>
+
+<form id="changelist-search" method="get">
+    <div class="card">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-4">
+
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" id="searchbar" value="{{ search }}"
+                            autofocus="">
+                    </div>
+                    <!-- DIV needed for valid HTML -->
+
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group">
+                        <button class="btn btn-primary" style="vertical-align: middle; text-align: center; margin: 0px;"
+                            type="submit">
+                            <i class="fas fa-search" style="font-size: 20px; color: white;"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row mt-3 ">
+                <div class="col-md-6 align-items-center">
+                    <span class="small quiet text-center">{{ count }} resultado(s) encontrado(s) </span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% block filtros_searche %}
+    <div class="card">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="row col-md-12">
+
+                    <h4>Filtros:</h4>
+
+                </div>
+            </div>
+            <div class="row">
+
+                <div class="col">
+                    <select name="sex" class="selectpicker form-control" data-live-search="true"
+                        data-provide="selectpicker" data-size="10" id="id_sexFilter" multiple="" tabindex="-98" multiple
+                        title="Sexo">
+                        <optgroup label="Sexo">
+
+                            <option id="sexoM" value="M">Masculino</option>
+                            <option id="sexoF" value="F">Feminino</option>
+
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col">
+                    <select name="hcenter" class="selectpicker form-control" data-live-search="true"
+                        data-provide="selectpicker" data-size="10" id="id_hcenter" multiple="" tabindex="-98" multiple
+                        title="Centro de Saúde">
+                        <optgroup label="Centro de Saúde">
+                            {% for healthcenter in healthcenters %}
+                            {% if healthcenter.active %}
+                            <option id="hcenter{{healthcenter.id}}" value="{{healthcenter.id}}"> {{healthcenter.name}}
+                            </option>
+                            {% endif %}
+                            {% endfor %}
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="col">
+                    <select name="nbhood" class="selectpicker form-control" data-live-search="true"
+                        data-provide="selectpicker" data-size="10" id="id_neighborhood" multiple="" tabindex="-98"
+                        multiple title="Bairro">
+                        <optgroup label="Bairro">
+                            {% for neighborhood in neighborhoods %}
+                            <option
+                                id="nbhood{% if neighborhood.neighborhood is not None %}{{neighborhood.neighborhood}}{% else %}vazio{% endif %}"
+                                value="{% if neighborhood.neighborhood is None %}vazio{% else %}{{neighborhood.neighborhood}}{% endif %}">
+                                {% if neighborhood.neighborhood is None %}
+                                Sem bairro
+                                {% else %}
+                                {{neighborhood.neighborhood}}
+                                {% endif %}
+                            </option>
+                            {% endfor %}
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="col">
+                    <input type="text" name="date" data-provide="datepicker2" class="form-control datepicker2"
+                        id="id_date" placeholder="Data" value="{{date}}">
+                </div>
+
+
+                <div class="col">
+                    <div class="input-group">
+                        <button class="btn btn-primary" style="vertical-align: middle; text-align: center; margin: 0px;"
+                            type="submit">
+                            <i class="fas fa-filter" style="font-size: 20px; color: white;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    {% endblock %}
+</form>
+<div class="padding_10">
+
+</div>
+<div class="card">
+    <div class="card-body">
+        {% if search_list_mode %}
+        <table class="table table-striped table-responsive">
+            <thead class="btn-primary">
+                <tr>
+                    <th style="vertical-align: middle; text-align: center;">NOME</th>
+                    <th style="vertical-align: middle; text-align: center;">IDADE</th>
+                    <th style="vertical-align: middle; text-align: center;">SEXO</th>
+                    <th>GRUPO DE RISCO</th>
+                    <th>SINTOMAS</th>
+                    <th style="vertical-align: middle; text-align: center;">FEBRE?</th>
+                    <th style="vertical-align: middle; text-align: center;">CONTATO</th>
+                    <th style="vertical-align: middle; text-align: center;">DATA</th>
+                    <th style="vertical-align: middle; text-align: center;">VISUALIZAR</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for analisy in search_list %}
+                <tr>
+
+                    <td style="vertical-align: middle; text-align: center;">{{ analisy.citizen.name }} </td>
+                    <td style="vertical-align: middle; text-align: center;"><b>{{ analisy.citizen.age }}</b></td>
+                    <td style="vertical-align: middle; text-align: center;"><b>{{ analisy.citizen.sex }}</b></td>
+
+                    <td style="vertical-align: middle;"><b>
+                            {% for gp in analisy.citizen.listRiskGroup.all %}
+                            <ul>
+                                <li>{{gp.name}}</li>
+                            </ul>
+                            {% endfor %}
+                        </b></td>
+
+                    <td style="vertical-align: middle;"><b>
+                            {% for ls in analisy.listSympton.all %}
+                            <ul>
+                                <li>{{ls.name}}</li>
+                            </ul>
+                            {% endfor %}
+                        </b></td>
+
+                    <td style="vertical-align: middle;"><b>
+                            {% if analisy.has_faver %}
+                            {% if analisy.fever is None %}
+                            Sim
+                            {% else %}
+                            {{analisy.fever}}°
+                            {% endif %}
+                            {% else %}
+                            Não
+                            {% endif %}
+                        </b></td>
+
+                    <td style="vertical-align: middle; text-align: center;">
+
+                        {% if analisy.covidContact.typeContactCode == 'CCC' %}
+
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                            Contato com caso confirmado
+                        </div>
+                        {% elif analisy.covidContact.typeContactCode == 'CCS' %}
+                        <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #ff4500;">
+                            Contato com caso suspeito
+                        </div>
+                        {% elif analisy.covidContact.typeContactCode == 'NSC' %}
+                        <div class="text-xs font-weight-bold  text-uppercase mb-1" style="color: #f6c23e;">
+                            Não sabe se teve contato
+                        </div>
+                        {% endif %}
+
+                    </td>
+
+                    <td style="vertical-align: middle; text-align: center;">
+                        {{analisy.date}}
+                    </td>
+                    <td style="vertical-align: middle; text-align: center;">
+
+                        <button type="button" class="btn btn-primary" onclick="getAnalisy({{analisy.pk}})"
+                            data-toggle="modal" data-target=".bd-example-modal-lg"
+                            style="align-items: center; text-align: center; font-size: 0px;">
+
+                            <ion-icon name="eye" style="font-size: 25px;"></ion-icon>
+                        </button>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if search_list.has_next or search_list.has_previous %}
+
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center">
+                {% if search_list.number != 1 %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="?search={{ search }}&page=1{% if sex %}{% for sx in sex %}&sex={{sx}}{% endfor %}{% endif %}{% if hcenter %}{% for hc in hcenter %}&hcenter={{hc}}{% endfor %}{% endif %}{% if nbhood %}{% for nbh in nbhood %}&nbhood={{nbh}}{% endfor %}{% endif %}{% if date %}&date={{date}}{% endif %}">
+                        Primeiro
+                    </a>
+                </li>
+                {% endif %}
+
+                {% if search_list.has_previous %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="?search={{ search }}&page={{ search_list.previous_page_number }}{% if sex %}{% for sx in sex %}&sex={{sx}}{% endfor %}{% endif %}{% if hcenter %}{% for hc in hcenter %}&hcenter={{hc}}{% endfor %}{% endif %}{% if nbhood %}{% for nbh in nbhood %}&nbhood={{nbh}}{% endfor %}{% endif %}{% if date %}&date={{date}}{% endif %}">
+                        {{search_list.number|add:"-1"}}
+                    </a>
+                </li>
+
+                {% endif %}
+
+                {% if search_list.number == search_list.paginator.num_pages %}
+                <li class="page-item active">
+                    <span class="page-link">
+                        Último
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">
+                        {{ search_list.number }}
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+                {% endif %}
+
+
+                {% if search_list.has_next  %}
+
+                <li class="page-item">
+                    <a class="page-link"
+                        href="?search={{ search }}&page={{ search_list.next_page_number }}{% if sex %}{% for sx in sex %}&sex={{sx}}{% endfor %}{% endif %}{% if hcenter %}{% for hc in hcenter %}&hcenter={{hc}}{% endfor %}{% endif %}{% if nbhood %}{% for nbh in nbhood %}&nbhood={{nbh}}{% endfor %}{% endif %}{% if date %}&date={{date}}{% endif %}">
+                        {{search_list.number|add:"+1"}}
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link"
+                        href="?search={{ search }}&page={{ search_list.paginator.num_pages }}{% if sex %}{% for sx in sex %}&sex={{sx}}{% endfor %}{% endif %}{% if hcenter %}{% for hc in hcenter %}&hcenter={{hc}}{% endfor %}{% endif %}{% if nbhood %}{% for nbh in nbhood %}&nbhood={{nbh}}{% endfor %}{% endif %}{% if date %}&date={{date}}{% endif %}">
+                        Último
+                    </a>
+                </li>
+
+
+                {% endif %}
+
+            </ul>
+        </nav>
+        {% endif %}
+
+
+        {% else %}
+        <table class="table table-striped table-responsive">
+            <thead class="btn-primary">
+                <tr>
+                    <th style="vertical-align: middle; text-align: center;">NOME</th>
+                    <th style="vertical-align: middle; text-align: center;">IDADE</th>
+                    <th style="vertical-align: middle; text-align: center;">SEXO</th>
+                    <th>GRUPO DE RISCO</th>
+                    <th>SINTOMAS</th>
+                    <th style="vertical-align: middle; text-align: center;">FEBRE?</th>
+                    <th style="vertical-align: middle; text-align: center;">CONTATO</th>
+                    <th style="vertical-align: middle; text-align: center;">DATA</th>
+                    <th style="vertical-align: middle; text-align: center;">VISUALIZAR</th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for analisy in object_list %}
+                <tr>
+                    <td style="vertical-align: middle; text-align: center;"><b>{{ analisy.citizen.name }}</b></td>
+                    <td style="vertical-align: middle; text-align: center;"><b>{{ analisy.citizen.age }}</b></td>
+                    <td style="vertical-align: middle; text-align: center;"><b>{{ analisy.citizen.sex }}</b></td>
+
+                    <td style="vertical-align: middle;"><b>
+                            {% for gp in analisy.citizen.listRiskGroup.all %}
+                            <ul>
+                                <li>{{gp.name}}</li>
+                            </ul>
+                            {% endfor %}
+                        </b></td>
+
+                    <td style="vertical-align: middle;"><b>
+                            {% for ls in analisy.listSympton.all %}
+                            <ul>
+                                <li>{{ls.name}}</li>
+                            </ul>
+                            {% endfor %}
+                        </b></td>
+
+                    <td style="vertical-align: middle;"><b>
+                            {% if analisy.has_faver %}
+                            {% if analisy.fever is None %}
+                            Sim
+                            {% else %}
+                            {{analisy.fever}}°
+                            {% endif %}
+                            {% else %}
+                            Não
+                            {% endif %}
+                        </b></td>
+
+                    <td style="vertical-align: middle; text-align: center;">
+
+                        {% if analisy.covidContact.typeContactCode == 'CCC' %}
+
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                            Contato com caso confirmado
+                        </div>
+                        {% elif analisy.covidContact.typeContactCode == 'CCS' %}
+                        <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: #ff4500;">
+                            Contato com caso suspeito
+                        </div>
+                        {% elif analisy.covidContact.typeContactCode == 'NSC' %}
+                        <div class="text-xs font-weight-bold  text-uppercase mb-1" style="color: #f6c23e;">
+                            Não sabe se teve contato
+                        </div>
+                        {% endif %}
+
+                    </td>
+                    <td style="vertical-align: middle; text-align: center;">
+                        {{analisy.date}}
+                    </td>
+
+                    <td style="vertical-align: middle; text-align: center;">
+
+                        <button type="button" class="btn btn-primary" onclick="getAnalisy({{analisy.pk}})"
+                            data-toggle="modal" data-target=".bd-example-modal-lg"
+                            style="align-items: center; text-align: center; font-size: 0px;">
+
+                            <ion-icon name="eye" style="font-size: 25px;"></ion-icon>
+                        </button>
+
+
+
+                    </td>
+
+                </tr>
+                {% endfor %}
+
+
+            </tbody>
+        </table>
+
+        {% if page_obj.has_next or page_obj.has_previous %}
+
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.number != 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">Primeiro</a>
+                </li>
+                {% endif %}
+
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="?page={{ page_obj.previous_page_number }}">{{page_obj.number|add:"-1"}}</a>
+                </li>
+
+                {% endif %}
+
+                {% if page_obj.number == page_obj.paginator.num_pages %}
+                <li class="page-item active">
+                    <span class="page-link">
+                        Último
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+                {% else %}
+                <li class="page-item active">
+                    <span class="page-link">
+                        {{ page_obj.number }}
+                        <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+                {% endif %}
+
+
+                {% if page_obj.has_next  %}
+
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{page_obj.number|add:"+1"}}</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Último</a>
+                </li>
+
+
+                {% endif %}
+
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% endif %}
+    </div>
+
+</div>
+
+
+
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true" id="modalInfo">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+
+
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+                <div class="d-flex justify-content-center">
+                    <button id="btnProfile" class="btn btn-primary rounded-circle" onclick="switchCard('profile')"
+                        style="align-items: center; text-align: center; font-size: 0px; padding: 10px;">
+                        <i class="fas fa-id-card " style="font-size: 30px;"></i>
+                    </button>
+
+                    <button id="btnLocation" class="btn btn-primary  rounded-circle" onclick="switchCard('location')"
+                        style="margin-left: 5px;align-items: center; text-align: center; font-size: 0px; padding: 10px;">
+                        <i class="fas fa-map-marked-alt " style="font-size: 30px;"></i>
+                    </button>
+
+                </div>
+
+
+                <br>
+
+                <div class="card" id="profile">
+                    <div class="card-body">
+
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <Label><b>Nome</b></Label>
+                                <p id="name"></p>
+                            </div>
+                            <div class="col">
+                                <label>
+                                    <b>Idade</b>
+                                </label>
+                                <p id="age"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label><b>Telefone</b></label>
+                                <p id="phoneNumber"></p>
+                            </div>
+
+                            <div class="col">
+                                <label><b>Sexo</b></label>
+                                <p id="gender"></p>
+                            </div>
+
+
+                            <div class="col">
+                                <label><b>Febre</b></label>
+                                <p id="faver"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label><b>Contato</b></label>
+                                <p id="covidContact"></p>
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="d-flex justify-content-center">
+
+                                    <div class="card">
+                                        <div class="card-body" style="overflow-y: scroll; height: 20vh; width: 28vw;">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h5 class="card-title">Grupo de Risco:</h5>
+                                                    <div>
+                                                        <ul id="ulRiskGroup">
+
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col border-left">
+                                                    <h5 class="card-title">Sintomas:</h5>
+                                                    <div>
+                                                        <ul id="ulSymptoms">
+
+                                                        </ul>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="card" id="location" style="display: none;">
+                    <div class="card-body">
+                        <div class="chart-area">
+                            <div id="map"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+    // $('#modalInfo').modal('show');
+
+</script>
+
+<!-- <script src="{% static 'core/js/heatmap/leaflet-heat.js' %}"></script> -->
+<script src="{% static 'core/js/heatmapInfo.js' %}?v=1.0"></script>
+<script src="{% static 'core/js/index.js' %}?v=1.0"></script>
+
+<script src="{% static 'core/js/getAnalisy.js' %}?v=1.0"></script>
+
+<script>
+
+    // preencherHeatmap(10, 10, 'M', 10);
+
+
+
+</script>
+
+{% for sx in sex %}
+<script>
+    document.getElementById('sexo' + '{{ sx }}').setAttribute("selected", "true")
+</script>
+{% endfor %}
+
+{% for hc in hcenter %}
+<script>
+    document.getElementById('hcenter' + {{ hc }}).setAttribute("selected", "true")
+</script>
+{% endfor %}
+
+{% for nbh in nbhood %}
+<script>
+    document.getElementById('nbhood' + '{{ nbh }}').setAttribute("selected", "true")
+</script>
+{% endfor %}
+
+{% endblock %}

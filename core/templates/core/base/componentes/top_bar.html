@@ -1,0 +1,281 @@
+<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+    <!-- Sidebar Toggle (Topbar) -->
+    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+        <i class="fa fa-bars"></i>
+    </button>
+
+    <!-- Topbar Search -->
+    
+        <div class="d-flex justify-content-center">
+            <h4 class="m-0 font-weight-bold text-primary">
+            {% if profissional %}
+            {% if profissional.city %}
+                {{profissional.city}}
+                {% endif %}
+                {% if healthcenters %}
+                {% for hc in healthcenters%}
+                - {{hc}}
+                {% endfor %}
+                {% endif %}
+            {% endif %}
+            </h4> 
+        </div>
+    
+
+    <!-- Topbar Navbar -->
+    <ul class="navbar-nav ml-auto">
+
+        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+        <li class="nav-item dropdown no-arrow d-sm-none">
+            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+            </a>
+            <!-- Dropdown - Messages -->
+            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                aria-labelledby="searchDropdown">
+                <form class="form-inline mr-auto w-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                            aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </li>
+
+        
+        <!-- <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw"></i>
+              
+                <span class="badge badge-danger badge-counter">0</span>
+            </a>
+       
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                    Alertas
+                </h6>
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">Ver mais</a>
+            </div>
+        </li> -->
+
+        
+        <!-- <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-envelope fa-fw"></i>
+               
+                <span class="badge badge-danger badge-counter">0</span>
+             
+            </a>
+           
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">
+                    Mensagens
+                </h6>
+
+                <a class="dropdown-item text-center small text-gray-500" href="#">
+                    Ler mais mensagens</a>
+            </div>
+        </li> -->
+
+        <!-- <div class="topbar-divider d-none d-sm-block"></div> -->
+
+        <!-- Nav Item - User Information -->
+        <li class="nav-item dropdown no-arrow" id = "hover-style">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-700 small">{{request.user.username}}</span> </br>
+
+                <ion-icon class="img-profile rounded-circle" name="person-circle-outline" ></ion-icon>
+
+            </a>
+
+            
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <!--<a class="dropdown-item" href="#">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Perfil
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                  Configurações
+                </a>-->
+
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#alterPasswordModal">
+                    <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Alterar senha
+                </a>
+
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModalLogOut">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Sair
+                </a>
+            </div>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<div class="modal fade" id="logoutModalLogOut" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Deseja realmente sair ?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Selecione "Sair" abaixo se você estiver pronto para encerrar sua sessão atual.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-primary" href="{% url 'core:logout' %}">Sair</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="alterPasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Alteração de senha</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-md-12 col-form-label">Senha Atual</label>
+                            <input class="col-md-12 form-control" type="password" name='password' required
+                                id='password'>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-md-12 col-form-label">Nova Senha</label>
+                            <input class="col-md-12 form-control" type="password" name='new_password' id="new_password"
+                                required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-md-12 col-form-label">Confirme Nova Senha</label>
+                            <input class="col-md-12 form-control" type="password" name='confirm_password'
+                                id="confirm_password" required>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" type="button" onclick="alterpsw()">Salvar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+
+<script>
+
+
+    function validatePassword() {
+
+        var password = document.getElementById("new_password")
+            , confirm_password = document.getElementById("confirm_password");
+        if (password.value != confirm_password.value) {
+            confirm_password.classList.add('is-invalid');
+            return false;
+        } else {
+            return true;
+        }
+    }
+    function alterpsw() {
+        if (validatePassword()) {
+            password = document.getElementById('password').value
+            new_password = document.getElementById('new_password').value
+
+
+            $.ajax({
+                type: "POST",
+                url: "/pages/professionals/update_psw",
+                data: {
+                    'password': password,
+                    'new_password': new_password,
+                    'login': '{{request.user.username}}',
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    if (data['data']) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Senha alterada com sucesso! Faça o login novamente.',
+                            showConfirmButton: true,
+                        }).then((isConfirm) => {
+                            if (isConfirm) {
+                                window.location.href = "/";
+                            } 
+                        });;
+                        $('#alterPasswordModal').modal('hide');
+                    } else {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'Senha não alterada! Senha atual não confere.',
+                            showConfirmButton: true,
+                        });
+                    }
+                }
+            }
+            );
+        }
+        else {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'center',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                onOpen: (toast) => {
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon: 'error',
+                title: 'Senhas não conferem!'
+            })
+        }
+    }
+</script>
+
+
+{% endblock %}

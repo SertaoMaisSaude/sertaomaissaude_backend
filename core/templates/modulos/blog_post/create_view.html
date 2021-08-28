@@ -1,0 +1,57 @@
+{% extends 'core/base/base_create_view.html' %}
+{% load static %}
+
+{% block cabecalho %}
+{% if object.pk is none %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Nova Notícia</h1>
+</div>
+{% else %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Editar Notícia</h1>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block formulario %}
+<div class="row">
+    <div class="col-md-11">
+        {{ form.title.label_tag }}
+        {{ form.title }}
+        <div class="errorList">
+            {{ form.title.errors }}
+        </div>
+    </div>
+
+    <div class="col-md-1">
+        {{ form.active.label_tag }}
+        {{ form.active }}
+        <div class="errorList">
+            {{ form.active.errors }}
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        {{ form.body.label_tag }}
+        {{ form.body }}
+        <div class="errorList">
+            {{ form.body.errors }}
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        {{ form.photo.label_tag }}
+        {{ form.photo }}
+        <div class="errorList">
+            {{ form.photo.errors }}
+        </div>
+    </div>
+    <div class="col-md-6">
+        {{ form.city.label_tag }}
+        {{ form.city }}
+        <div class="errorList">
+            {{ form.city.errors }}
+        </div>
+    </div>
+</div>
+{% endblock %}

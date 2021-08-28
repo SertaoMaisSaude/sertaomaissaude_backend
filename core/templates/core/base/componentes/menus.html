@@ -1,0 +1,197 @@
+{% load static %}
+
+
+
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion toggled " id="accordionSidebar">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/"
+        style=" padding: 5px;margin-top:5%; margin-bottom: 5%;">
+        <!-- <div class="sidebar-brand-icon rotate-n-15">
+            <ion-icon name="bug-outline" style="font-size: 20px;"></ion-icon>
+        </div> -->
+        <img src="{% static 'core/images/logo.png' %}" alt="" style="width: 100%;">
+        <!-- <div class="sidebar-brand-text mx-2">COVID-19 - UAST</div> -->
+
+    </a>
+    {% comment %} <li class="nav-item">
+        <a class="nav-link">
+            {% if profissional %}
+            <span>{{profissional.city}}</span>
+            {% endif %}
+        </a>
+    </li> {% endcomment %}
+    <!-- Divider -->
+    <hr class="sidebar-divider my-1">
+    
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item {% if request.path == '/pages/'  %} active {% endif %}">
+        <a class="nav-link " href="/" id = "item-menu">
+            <i class="fas fa-home"></i>
+            <span>Página Inicial</span>
+        </a>
+    </li>
+
+
+    {% if  perms.global_permissions.menu_gerenciar %}
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+
+
+    <div class="sidebar-heading" style="color: white;">
+        ADMIN
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item {% if request.path == '/pages/citys/' or request.path == '/pages/professionals/' or request.path == '/pages/health_tips/' or request.path == '/pages/daily_newsletter/' or request.path == '/pages/blog_post/' or request.path == '/pages/health_center/' %} active {% endif %}">
+        
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
+            aria-controls="collapseTwo" id = "item-menu">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Gerenciar</span>
+        </a>
+        <div id="collapseTwo" style="z-index: 1002;" class="collapse" aria-labelledby="headingTwo"
+            data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">CADASTROS:</h6>
+
+
+                {% if  perms.global_permissions.menu_acessa_cidades %}
+                <a class="collapse-item" href="{% url 'core:pages:city:list_view' %}">
+                    <i class="fas fa-map-marked-alt fa-chart-area"></i>
+                    <span>Cidades</span></a>
+                {% endif %}
+
+                {% if  perms.global_permissions.menu_acessa_profissionais %}
+                <a class="collapse-item" href="{% url 'core:pages:professional:list_view' %}">
+                    <i class="fas fa-stethoscope"></i>
+                    <span>Profissionais</span></a>
+                {% endif %}
+                {% if  perms.global_permissions.menu_acessa_dicas_saude %}
+                <a class="collapse-item" href="{% url 'core:pages:health_tips:list_view' %}">
+                    <i class="fas fa-user-md"></i>
+                    <span>Dicas de Saúde</span></a>
+                {% endif %}
+                {% if  perms.global_permissions.menu_acessa_boletim %}
+                <a class="collapse-item" href="{% url 'core:pages:daily_newsletter:list_view' %}">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Boletim</span></a>
+                {% endif %}
+
+                {% if  perms.global_permissions.menu_acessa_noticia %}
+                <a class="collapse-item" href="{% url 'core:pages:blog_post:list_view' %}">
+                    <i class="fas fa-blog"></i>
+                    <span>Notícias</span></a>
+                {% endif %}
+
+                {% if  perms.global_permissions.menu_acessa_centro_saude %}
+                <a class="collapse-item" href="{% url 'core:pages:health_center:list_view' %}">
+                    <i class="fas fa-hospital"></i>
+                    <span>Centro de Saúde</span></a>
+
+                {% endif %}
+            </div>
+        </div>
+    </li>
+    {% endif %}
+
+    <!-- <li class="nav-item">
+        <a class="nav-link" href="{% url 'core:pages:city:list_view' %}">
+            <i class="fas fa-map-marked-alt fa-chart-area"></i>
+            <span>Cidades</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'core:pages:professional:list_view' %}">
+            <i class="fas fa-stethoscope"></i>
+            <span>Profissionais</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'core:pages:health_tips:list_view' %}">
+            <i class="fas fa-user-md"></i>
+            <span>Dicas de Saúde</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'core:pages:daily_newsletter:list_view' %}">
+            <i class="fas fa-file-invoice"></i>
+            <span>Boletim</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'core:pages:blog_post:list_view' %}">
+            <i class="fas fa-blog"></i>
+            <span>Notícias</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'core:pages:health_center:list_view' %}">
+            <i class="fas fa-hospital"></i>
+            <span>Centro de Saúde</span></a>
+    </li> -->
+
+    {% if  perms.global_permissions.menu_acessa_registros_estado_saude %}
+    <hr class="sidebar-divider">
+
+    <div class="sidebar-heading" style="color: white;">
+        ANÁLISE
+    </div>
+
+    <li class="nav-item {% if '/pages/analisy/' in request.path %} active {% endif %}" id="item-menu">
+        
+        <a class="nav-link" href="{% url 'core:pages:analisy:list_view' %}" >
+            <i class="fas fa-table"></i>
+            <span>Registros de Estados de Saúde</span></a>
+    </li>
+    <li class="nav-item {% if request.path == '/pages/triagem/'  %} active {% endif %}" >
+        <a class="nav-link" href="{% url 'atendimento:pages:triagem:list_view' %}" id = "item-menu">
+            <i class="fas fa-laptop-medical"></i>
+            <span>Atendimento</span></a>
+    </li>
+
+    {% endif %}
+    <!-- Nav Item - Pages Collapse Menu
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+               aria-expanded="true"
+               aria-controls="collapseTwo">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Dropdown</span>
+            </a>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Opções:</h6>
+                    <a class="collapse-item" href="buttons.html">OP1</a>
+                    <a class="collapse-item" href="cards.html">OP2</a>
+                </div>
+            </div>
+        </li> -->
+
+    <!-- Nav Item - Utilities Collapse Menu
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+               aria-expanded="true" aria-controls="collapseUtilities">
+                <i class="fas fa-fw fa-wrench"></i>
+                <span>Dropdown</span>
+            </a>
+            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Opções:</h6>
+                    <a class="collapse-item" href="#">OP</a>
+
+                </div>
+            </div>
+        </li> -->
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>
+

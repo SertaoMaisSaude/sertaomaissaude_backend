@@ -1,0 +1,13 @@
+.idea/
+.idea/workspace.xml
+/media
+/static
+/venv/
+__pycache__
+db.sqlite3
+/backendCovid_19/local.py
+/backendCovid_19/local_db.py
+/backendCovid_19/productions.py
+.env
+/config/senhas.txt
+

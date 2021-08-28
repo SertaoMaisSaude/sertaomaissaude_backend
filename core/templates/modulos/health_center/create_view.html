@@ -1,0 +1,114 @@
+{% extends 'core/base/base_create_view.html' %}
+{% load static %}
+
+{% block cabecalho %}
+{% if object.pk is none %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Novo Centro de Saúde</h1>
+</div>
+{% else %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Editar Centro de Saúde</h1>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block formulario %}
+
+<div class="row">
+    <div class="col-md-6">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        <div class="errorList">
+            {{ form.name.errors }}
+        </div>
+    </div>
+    <div class="col-md-6">
+        {{ form.city.label_tag }}
+        {{ form.city }}
+        <div class="errorList">
+            {{ form.city.errors }}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-5">
+        {{ form.neighborhood.label_tag }}
+        {{ form.neighborhood }}
+        <div class="errorList">
+            {{ form.neighborhood.errors }}
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        {{ form.street.label_tag }}
+        {{ form.street }}
+        <div class="errorList">
+            {{ form.street.errors }}
+        </div>
+    </div>
+    <div class="col-md-2">
+        {{ form.street_number.label_tag }}
+        {{ form.street_number }}
+        <div class="errorList">
+            {{ form.street_number.errors }}
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-4">
+        {{ form.phone_number.label_tag }}
+        {{ form.phone_number }}
+        <div class="errorList">
+            {{ form.phone_number.errors }}
+        </div>
+    </div>
+    <div class="col-md-4">
+        {{ form.lat.label_tag }}
+        {{ form.lat }}
+        <div class="errorList">
+            {{ form.lat.errors }}
+        </div>
+    </div>
+    <div class="col-md-4">
+        {{ form.lng.label_tag }}
+        {{ form.lng}}
+        <div class="errorList">
+            {{ form.lng.errors }}
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="row">
+
+    <div class="col-md-5">
+        {{ form.coverage.label_tag }}
+        {{ form.coverage}}
+        <div class="errorList">
+            {{ form.coverage.errors }}
+        </div>
+    </div>
+
+    <div class="col">
+        {{ form.listProfessional.label_tag }}
+        {{ form.listProfessional}}
+        <div class="errorList">
+            {{ form.listProfessional.errors }}
+        </div>
+    </div>
+
+    <div class="col-md-1">
+        {{ form.active.label_tag }}
+        {{ form.active }}
+        <div class="errorList">
+            {{ form.active.errors }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'core/base/base_create_view.html' %}
+{% load static %}
+
+{% block cabecalho %}
+
+
+{% if object.pk is none %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Novo Profisional</h1>
+</div>
+{% else %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Editar Profisional</h1>
+</div>
+{% endif %}
+
+
+{% endblock %}
+
+
+
+
+{% block formulario %}
+<div class="row">
+    <div class="col-md-5">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        <div class="errorList">
+            {{ form.name.errors }}
+        </div>
+    </div>
+    <div class="col-md-3">
+        {{ form.typeProfessional.label_tag }}
+        {{ form.typeProfessional }}
+        <div class="errorList">
+            {{ form.typeProfessional.errors }}
+        </div>
+    </div>
+    <div class="col-md-4">
+        {{ form.city.label_tag }}
+        {{ form.city }}
+        <div class="errorList">
+            {{ form.city.errors }}
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        <div class="errorList">
+            {{ form.username.errors }}
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        {{ form.phoneNumber.label_tag }}
+        {{ form.phoneNumber }}
+        <div class="errorList">
+            {{ form.phoneNumber.errors }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        <div class="errorList">
+            {{ form.email.errors }}
+        </div>
+    </div>
+
+    <div class="col-md-1">
+        {{ form.active.label_tag }}
+        {{ form.active }}
+        <div class="errorList">
+            {{ form.active.errors }}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

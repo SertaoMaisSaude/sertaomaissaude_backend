@@ -1,0 +1,55 @@
+{% extends 'core/base/lautoy_base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="card">
+    <div style="    background-color: #ffffff;" class="card-body">
+        {% block cabecalho %}
+        {% endblock %}
+
+        <form novalidate id="id_form_padrao" data-provide="validation" enctype="multipart/form-data" method="post"
+            autocomplete="off">
+            {% csrf_token %}
+            {#                {% if form.errors %}#}
+            {#                    <div class="callout callout-danger" style="    margin-left: 15px;" role="alert">#}
+            {#                        <h5>Por favor, corrija os erros abaixo.</h5>#}
+            {#                    </div>#}
+            {##}
+            {#                {% endif %}#}
+            <div id="formulario">
+
+                {% block formulario %}
+                {% for field in form %}
+                <div class="col-md-12">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.help_text %}
+                    <p class="help">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                    <div class="errorlist -red-river">
+                        {{ field.errors }}
+                    </div>
+
+                </div>
+
+                {% endfor %}
+                {% endblock %}
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-10"></div>
+                <div class="col-md-2">
+                    {% block bt_salvar %}
+                    <button class="btn btn-w-md btn-round btn-primary text-white form-control" name="padrao_submit"
+                        type="submit" style="vertical-align: middle;" data-toggle="tooltip" data-placement="top" title="Salvar">
+                        <i class="fa fa-save" style="font-size: 20px; color: white;"></i>
+                        
+                    </button>
+                    {% endblock %}
+                </div>
+            </div>
+            <br />
+        </form>
+    </div>
+</div>
+{% endblock %}

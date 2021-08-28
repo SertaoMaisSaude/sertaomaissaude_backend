@@ -1,0 +1,5 @@
+psql -h localhost -U postgres -d covid_19_dev -f "back_19-05-2020_19.sql"
+
+OU
+
+pg_restore -U postgres -d covid_19 back_19-05-2020_19.sql

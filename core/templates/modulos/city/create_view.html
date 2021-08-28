@@ -1,0 +1,33 @@
+{% extends 'core/base/base_create_view.html' %}
+{% load static %}
+
+{% block cabecalho %}
+{% if object.pk is none %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Nova Cidade</h1>
+</div>
+{% else %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Editar Cidade</h1>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block formulario %}
+<div class="row">
+    <div class="col-md-5">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        <div class="errorList">
+            {{ form.name.errors }}
+        </div>
+    </div>
+    <div class="col-md-1">
+        {{ form.active.label_tag }}
+        {{ form.active }}
+        <div class="errorList">
+            {{ form.active.errors }}
+        </div>
+    </div>
+</div>
+{% endblock %}

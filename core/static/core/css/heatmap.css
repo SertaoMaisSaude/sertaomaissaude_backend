@@ -1,0 +1,32 @@
+#map {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ghbtns {
+    position: relative;
+    top: 4px;
+    margin-left: 5px;
+  }
+
+  a {
+    color: #0077ff;
+  }
+
+.fa_heatmap {
+  color: green;
+  position: absolute;
+  right: 10px;
+}
+
+.nav_select:hover {
+    background-color: #8098df;
+    cursor: pointer;
+    color: white;
+    text-align: center;
+}
+
+.filterAtalho:hover{
+  background-color: #edeff5;
+  cursor: pointer;
+}
